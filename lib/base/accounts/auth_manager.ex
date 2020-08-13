@@ -53,7 +53,12 @@ defmodule App.Base.Account.AuthManager do
     do: {:error, :no_email_and_password}
 
   def admin_login(email, password) do
-    AdminUserManager.get_admin_user_by_email(email)
-    |> AdminUserManager.verify_admin_user(password)
+    user = AdminUserManager.get_admin_user_by_email(email)
+
+    if user do
+      user |> AdminUserManager.verify_admin_user(password)
+    else
+      {:error, %{:message => "No match user"}}
+    end
   end
 end

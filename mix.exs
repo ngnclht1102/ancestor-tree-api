@@ -49,7 +49,8 @@ defmodule App.MixProject do
       {:arc_ecto, "~> 0.11.3"},
       {:argon2_elixir, "~> 2.0"},
       {:timex, "~> 3.5"},
-      {:joken, "~> 2.0"}
+      {:joken, "~> 2.0"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 

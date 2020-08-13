@@ -14,7 +14,8 @@ defmodule App.Base.Controllers.AdminSessionController do
          %{
            id: user.id,
            access_token: user.access_token,
-           email: user.email
+           email: user.email,
+           name: user.name
          }}
 
       error ->
