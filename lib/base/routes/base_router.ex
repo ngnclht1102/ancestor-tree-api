@@ -10,15 +10,21 @@ defmodule App.Base.Router do
         plug App.Base.Plugs.AdminAuthPlug
       end
 
-      scope "/public", App.Base.Controllers do
+      scope "/admin/public", App.Base.Controllers.Admin do
         pipe_through :public_api
 
         post("/login", AdminSessionController, :login)
       end
 
-      scope "/admin", App.Base.Controllers do
+      scope "/admin", App.Base.Controllers.Admin do
         pipe_through :admin_api
         get("/sessions", AdminSessionController, :info)
+      end
+
+      scope "/user/public", App.Base.Controllers.User do
+        pipe_through :public_api
+
+        post("/register", UserController, :register)
       end
     end
   end

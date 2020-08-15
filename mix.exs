@@ -50,7 +50,11 @@ defmodule App.MixProject do
       {:argon2_elixir, "~> 2.0"},
       {:timex, "~> 3.5"},
       {:joken, "~> 2.0"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:ex_machina, "~> 2.4"},
+      {:bureaucrat, "~> 0.2.7"},
+      {:poison, "~> 3.0"},
+      {:faker, "~> 0.14", only: :test}
     ]
   end
 

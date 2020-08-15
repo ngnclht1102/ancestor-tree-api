@@ -49,6 +49,33 @@ defmodule App.Base.Account.AuthManager do
     |> Repo.transaction()
   end
 
+  def create_normal_user(email, password) when is_nil(email) or is_nil(password),
+    do: {:error, %{message: "Empty params"}}
+
+  def create_normal_user(email, password) do
+    {:ok, access_token, _} = generate_access_token(email)
+
+    user_changeset =
+      User.create_changeset(
+        %User{},
+        %{
+          email: email,
+          password: password,
+          access_token: access_token
+        }
+      )
+
+    Multi.new()
+    |> Multi.insert(:user, user_changeset)
+    |> Multi.insert(:session, fn %{user: user} ->
+      Session.changeset(%Session{}, %{
+        email: email,
+        user_id: user.id
+      })
+    end)
+    |> Repo.transaction()
+  end
+
   def admin_login(email, password) when is_nil(email) and is_nil(password),
     do: {:error, :no_email_and_password}
 

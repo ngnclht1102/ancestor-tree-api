@@ -1,4 +1,4 @@
-defmodule App.Base.Controllers.AdminSessionController do
+defmodule App.Base.Controllers.Admin.AdminSessionController do
   use AppWeb, :controller
   alias App.Base.Account.AuthManager
 
