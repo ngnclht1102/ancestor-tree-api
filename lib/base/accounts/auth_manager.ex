@@ -67,10 +67,21 @@ defmodule App.Base.Account.AuthManager do
 
     Multi.new()
     |> Multi.insert(:user, user_changeset)
-    |> Multi.insert(:session, fn %{user: user} ->
+    |> Multi.insert(:admin_user, fn %{user: user} ->
+      AdminUser.changeset(%AdminUser{}, %{
+        user_id: user.id,
+        access_token: access_token,
+        role: AdminUser.role_family_owner(),
+        email: email,
+        name: "#{user.first_name} #{user.last_name}",
+        password: password
+      })
+    end)
+    |> Multi.insert(:session, fn %{user: user, admin_user: admin_user} ->
       Session.changeset(%Session{}, %{
         email: email,
-        user_id: user.id
+        user_id: user.id,
+        admin_user_id: admin_user.id
       })
     end)
     |> Repo.transaction()

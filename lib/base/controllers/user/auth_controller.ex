@@ -1,4 +1,4 @@
-defmodule App.Base.Controllers.User.UserController do
+defmodule App.Base.Controllers.User.AuthController do
   use AppWeb, :controller
   alias App.Base.Account.AuthManager
 
@@ -9,7 +9,7 @@ defmodule App.Base.Controllers.User.UserController do
 
     AuthManager.create_normal_user(email, password)
     |> case do
-      {:ok, %{user: user, session: _session}} ->
+      {:ok, %{user: user, session: _session, admin_user: _admin_user}} ->
         {:ok,
          %{
            id: user.id,
