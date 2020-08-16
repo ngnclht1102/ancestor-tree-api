@@ -26,7 +26,7 @@ defmodule App.Family.Family do
   def changeset(%__MODULE__{} = model, attrs) do
     model
     |> cast(attrs, @allow_fields)
-    |> validate_required([:name, :description])
+    |> validate_required([:name, :main_address])
     |> validate_length(:name, min: 3)
     |> foreign_key_constraint(:owner_id)
   end

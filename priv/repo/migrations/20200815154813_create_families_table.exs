@@ -8,7 +8,7 @@ defmodule App.Repo.Migrations.CreateFamiliesTable do
       add(:description, :text)
       add(:deleted_at, :naive_datetime)
 
-      add(:owner_id, references(:admin_user))
+      add(:owner_id, references(:admin_users))
       timestamps()
     end
   end

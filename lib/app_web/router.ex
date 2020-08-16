@@ -44,11 +44,11 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
 
-    scope "/admin", AppWeb.Controllers.Admin do
-      pipe_through :admin_api
+  scope "/admin", AppWeb.Admin do
+    pipe_through :admin_api
 
-      resources("/families", FamilyController, only: [:create, :index])
-    end
+    resources("/families", FamilyController, only: [:create, :index])
   end
 end
