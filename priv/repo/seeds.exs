@@ -12,7 +12,7 @@
 alias App.Repo
 alias App.Base.Account.AdminUser
 alias App.Base.Account.AuthManager
-alias App.Family.FamilyManager
+alias App.Family.Admin.FamilyManager
 import Ecto.Query, only: [from: 1]
 
 count_admin = from(u in AdminUser) |> Repo.aggregate(:count, :id)

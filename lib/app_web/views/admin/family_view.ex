@@ -15,4 +15,8 @@ defmodule AppWeb.Admin.FamilyView do
       description: item.description
     }
   end
+
+  def render("index.json", %{items: items}) do
+    render_many(items, __MODULE__, "family.json", as: :items)
+  end
 end
