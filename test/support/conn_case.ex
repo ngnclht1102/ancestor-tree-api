@@ -24,6 +24,7 @@ defmodule AppWeb.ConnCase do
       import Phoenix.ConnTest
       import Bureaucrat.Helpers
       import AppWeb.ConnCase
+      import App.Factory
 
       alias AppWeb.Router.Helpers, as: Routes
 

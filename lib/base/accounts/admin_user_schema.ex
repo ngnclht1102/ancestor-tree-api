@@ -6,7 +6,7 @@ defmodule App.Base.Account.AdminUser do
 
   import Argon2, only: [add_hash: 1]
   import Ecto.Changeset
-  alias Tfw.Account.User
+  alias App.Base.Account.User
 
   @allow_fields [
     :email,
@@ -65,4 +65,7 @@ defmodule App.Base.Account.AdminUser do
   end
 
   defp put_password_hash(changeset), do: changeset
+
+  def role_super_admin(), do: "admin_lv1"
+  def role_family_owner(), do: "admin_lv2"
 end

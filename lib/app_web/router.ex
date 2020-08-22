@@ -13,12 +13,6 @@ defmodule AppWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", AppWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", AppWeb do
   #   pipe_through :api
@@ -44,5 +38,19 @@ defmodule AppWeb.Router do
 
   scope "/" do
     register_base_route()
+  end
+
+  scope "/", AppWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+  end
+
+  scope "/admin", AppWeb.Admin do
+    pipe_through :admin_api
+
+    scope "/v1/", V1 do
+      resources("/families", FamilyController)
+    end
   end
 end

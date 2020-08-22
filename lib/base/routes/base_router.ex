@@ -24,7 +24,7 @@ defmodule App.Base.Router do
       scope "/user/public", App.Base.Controllers.User do
         pipe_through :public_api
 
-        post("/register", UserController, :register)
+        post("/register", AuthController, :register)
       end
     end
   end

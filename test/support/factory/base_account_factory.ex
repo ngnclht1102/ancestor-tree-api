@@ -4,14 +4,14 @@ defmodule App.Factory.AccountFactory do
   """
   alias App.Base.Account.{AdminUser, Session, User}
   alias App.Base.Ext.Helper.AuthToken
+  import Argon2, only: [add_hash: 1]
   alias Faker.{Lorem, Name, Internet}
 
   defmacro __using__(_opts) do
     quote do
       def session_factory do
         %Session{
-          email: Internet.email(),
-          user: build(:user)
+          email: Internet.email()
         }
       end
 
@@ -28,10 +28,15 @@ defmodule App.Factory.AccountFactory do
       end
 
       def admin_user_factory do
+        email = Internet.email()
+        user = build(:user)
+        {:ok, access_token, _} = AuthToken.generate_and_sign(%{"email" => email})
+
         %AdminUser{
-          email: Internet.email(),
-          password: Lorem.word(),
-          user: build(:user)
+          email: email,
+          access_token: access_token,
+          password: Lorem.sentence(),
+          user: user
         }
       end
     end

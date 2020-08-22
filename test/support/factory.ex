@@ -1,8 +1,11 @@
-defmodule Tfw.Factory do
+defmodule App.Factory do
   @moduledoc """
   All ExMachina factories are here
   """
   use ExMachina.Ecto, repo: App.Repo
 
-  use App.Factory.{}
+  use App.Factory.{
+    AccountFactory,
+    FamilyFactory
+  }
 end

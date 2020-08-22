@@ -1,7 +1,5 @@
-defmodule AppWeb.Base.UserControllerTest do
+defmodule AppWeb.Base.AuthControllerTest do
   use AppWeb.ConnCase
-  alias App.Repo
-  alias App.Base.Account.{AuthManager}
 
   describe "auth" do
     test "POST /user/public/register Register new account via email and password" do
