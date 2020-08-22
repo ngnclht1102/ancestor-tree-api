@@ -26,7 +26,7 @@ defmodule AppWeb.Admin.V1.PersonController do
     end
   end
 
-  # def update(_, _), do: {:missing_params, [:id]}
+  def update(_, _), do: {:missing_params, [:id]}
 
   # def delete(conn, %{"id" => id}) do
   #   with {:ok, family} <- FamilyManager.remove_family(id) do

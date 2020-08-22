@@ -9,7 +9,7 @@ defmodule App.Person.Admin.PersonManager do
   import Ecto.Query, only: [from: 2]
 
   def create_new_person(current_admin, params) do
-    Person.create_changeset(
+    Person.changeset(
       %Person{},
       Map.merge(
         params,
@@ -20,7 +20,17 @@ defmodule App.Person.Admin.PersonManager do
     ) |> Repo.insert()
   end
 
-  def update_person(current_admin, family_id, id, params) do
-
+  def update_person(current_admin, id, params) do
+    person = Person |> Repo.get(id)
+    if person do
+      Person.changeset(
+        person,
+        params
+      )
+        |> Repo.insert()
+    else
+      {:error, [:person_not_found]}
+    end
   end
+
 end

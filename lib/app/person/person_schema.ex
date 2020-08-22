@@ -61,7 +61,7 @@ defmodule App.Person.Person do
     timestamps()
   end
 
-  def create_changeset(%__MODULE__{} = user, attrs) do
+  def changeset(%__MODULE__{} = user, attrs) do
     user
     |> cast(attrs, @allow_fields)
     |> validate_required([:family_id, :full_name])

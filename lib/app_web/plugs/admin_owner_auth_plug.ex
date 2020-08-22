@@ -7,18 +7,23 @@ defmodule App.Plugs.AdminOwnerPlug do
 
   alias App.{Repo}
   alias App.Family.Family
+  alias App.Person.Person
 
   def init([]), do: []
 
   @spec call(Plug.Conn.t(), any) :: Plug.Conn.t()
   def call(conn, _opt) do
     if not is_nil(conn.params) and not is_nil(conn.params)do
-      %{"family_id" => family_id} = conn.params
       %{current_admin: current_admin} = conn.assigns
+      family_id = Map.get(conn.params, "family_id")
 
-      family = Family |> Repo.get(family_id)
-      if not is_nil(family) and family.owner_id == current_admin.id do
-        conn |> assign(:current_family, family)
+      if family_id do
+        family = Family |> Repo.get(family_id)
+        if not is_nil(family) and family.owner_id == current_admin.id do
+          conn |> assign(:current_family, family)
+        else
+          render_unauthorized(conn)
+        end
       else
         render_unauthorized(conn)
       end

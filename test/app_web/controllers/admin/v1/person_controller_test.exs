@@ -61,39 +61,39 @@ defmodule AppWeb.Admin.V1.PersonControllerTest do
   #     assert res["data"]
   #   end
 
-  #   test "PUT /admin/v1/persons/:id update family",
-  #        %{admin_user: admin_user, family: family} do
-  #     family_params = params_for(:family)
+    test "PUT /admin/v1/persons/:id update person",
+        %{admin_user: admin_user, family: family} do
+      person_params = params_for(:person)
 
-  #     created_res =
-  #       build_conn()
-  #       |> put_req_header("accept", "application/json")
-  #       |> put_req_header("x-access-token", admin_user.access_token)
-  #       |> post("/admin/v1/persons", family_params)
-  #       |> json_response(200)
+      created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post("/admin/v1/persons", person_params)
+        |> json_response(200)
 
-  #     id = created_res["data"]["id"]
+      id = created_res["data"]["id"]
 
-  #     res =
-  #       build_conn()
-  #       |> put_req_header("accept", "application/json")
-  #       |> put_req_header("x-access-token", admin_user.access_token)
-  #       |> put(
-  #         "/admin/v1/persons/#{id}",
-  #         Map.merge(family_params, %{
-  #           "name" => "Edited name"
-  #         })
-  #       )
-  #       |> doc(
-  #         description: "Update family",
-  #         operation_id: "update_family"
-  #       )
-  #       |> json_response(200)
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> put(
+          "/admin/v1/persons/#{id}",
+          Map.merge(person_params, %{
+            "full_name" => "Edited name",
+            "family_id" => family.id
+          })
+        )
+        |> doc(
+          description: "Update person",
+          operation_id: "update_person"
+        )
+        |> json_response(200)
 
-  #     assert res["data"]
-  #     assert res["data"]["name"] == "Edited name"
-  #   end
-  # end
+      assert res["data"]
+      assert res["data"]["full_name"] == "Edited name"
+    end
 
   # test "DELETE /admin/v1/persons/:id delete family",
   #      %{admin_user: admin_user, family: family} do
