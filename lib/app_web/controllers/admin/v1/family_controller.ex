@@ -1,4 +1,4 @@
-defmodule AppWeb.Admin.FamilyController do
+defmodule AppWeb.Admin.V1.FamilyController do
   use AppWeb, :controller
   alias App.Family.Admin.FamilyManager
 
@@ -7,11 +7,12 @@ defmodule AppWeb.Admin.FamilyController do
   def index(conn, params) do
     %{current_admin: current_admin} = conn.assigns
 
-    with {:ok, families} <- FamilyManager.list_families_of_an_owner(current_admin, params) do
-      render(conn, "index.json", item: families)
-    end
+    items = FamilyManager.list_families_of_an_owner(current_admin, params)
+
+    render(conn, "index.json", items: items)
   end
 
+  @spec create(atom | %{assigns: %{current_admin: atom | %{id: any}}}, map) :: any
   def create(conn, params) do
     %{current_admin: current_admin} = conn.assigns
 

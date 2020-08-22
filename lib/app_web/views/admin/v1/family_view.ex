@@ -1,4 +1,4 @@
-defmodule AppWeb.Admin.FamilyView do
+defmodule AppWeb.Admin.V1.FamilyView do
   use AppWeb, :view
 
   def render("show.json", %{item: item}) do
@@ -12,11 +12,14 @@ defmodule AppWeb.Admin.FamilyView do
       id: item.id,
       name: item.name,
       main_address: item.main_address,
-      description: item.description
+      description: item.description,
+      owner_id: item.owner_id
     }
   end
 
   def render("index.json", %{items: items}) do
-    render_many(items, __MODULE__, "family.json", as: :items)
+    %{
+      data: render_many(items, __MODULE__, "family.json", as: :item)
+    }
   end
 end

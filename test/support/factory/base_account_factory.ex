@@ -35,7 +35,7 @@ defmodule App.Factory.AccountFactory do
         %AdminUser{
           email: email,
           access_token: access_token,
-          password: Lorem.word(),
+          password: Lorem.sentence(),
           user: user
         }
       end

@@ -15,8 +15,8 @@ defmodule AppWeb.Base.AuthControllerTest do
     {:ok, %{admin_user: admin_user}}
   end
 
-  describe "auth" do
-    test "POST /admin/families create family",
+  describe "family" do
+    test "POST /admin/v1/families create family",
          %{admin_user: admin_user} do
       family_params = params_for(:family)
 
@@ -24,25 +24,39 @@ defmodule AppWeb.Base.AuthControllerTest do
         build_conn()
         |> put_req_header("accept", "application/json")
         |> put_req_header("x-access-token", admin_user.access_token)
-        |> post("/admin/families", family_params)
+        |> post("/admin/v1/families", family_params)
         |> doc(
           description: "Create family",
           operation_id: "create_family"
         )
         |> json_response(200)
 
-      # assert res["data"]
-      IO.puts("======================")
-      IO.inspect(res)
-      IO.puts("======================")
-      assert res
+      assert res["data"]
+    end
 
-      # duplicated_res =
-      #   build_conn()
-      #   |> post("/user/public/register", %{email: email, password: password})
-      #   |> json_response(400)
+    test "GET /admin/v1/families list families of current owner",
+         %{admin_user: admin_user} do
+      family_params = params_for(:family)
 
-      # assert duplicated_res["errors"]
+      created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post("/admin/v1/families", family_params)
+        |> json_response(200)
+
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> get("/admin/v1/families")
+        |> doc(
+          description: "List family of current owner",
+          operation_id: "list_family"
+        )
+        |> json_response(200)
+
+      assert res["data"]
     end
   end
 end

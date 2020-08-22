@@ -10,7 +10,8 @@ defmodule App.Family.Family do
   @allow_fields [
     :name,
     :main_address,
-    :description
+    :description,
+    :owner_id
   ]
 
   schema "families" do
