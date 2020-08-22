@@ -1,4 +1,4 @@
-defmodule AppWeb.Base.AuthControllerTest do
+defmodule AppWeb.Admin.V1.FamilyControllerTest do
   use AppWeb.ConnCase
 
   alias App.Base.Account.AuthManager
