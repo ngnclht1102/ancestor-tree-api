@@ -12,20 +12,19 @@ defmodule AppWeb.Admin.V1.PersonController do
   #   render(conn, "index.json", items: items)
   # end
 
-  def create(conn, %{ "family_id" => family_id } = params) do
+  def create(conn, params) do
     %{current_admin: current_admin} = conn.assigns
 
-    with {:ok, person} <- PersonManager.create_new_person(current_admin, family_id, params) do
+    with {:ok, person} <- PersonManager.create_new_person(current_admin, params) do
       render(conn, "show.json", item: person)
     end
   end
-  def create(_, _ ), do: {:missing_params, [:family_id]}
 
-  # def update(conn, %{"id" => id} = params) do
-  #   with {:ok, family} <- FamilyManager.update_family(id, params) do
-  #     render(conn, "show.json", item: family)
-  #   end
-  # end
+  def update(conn, %{"id" => id} = params) do
+    with {:ok, person} <- PersonManager.update_person(id, params) do
+      render(conn, "show.json", item: person)
+    end
+  end
 
   # def update(_, _), do: {:missing_params, [:id]}
 
