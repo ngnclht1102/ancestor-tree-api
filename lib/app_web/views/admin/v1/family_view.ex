@@ -13,7 +13,8 @@ defmodule AppWeb.Admin.V1.FamilyView do
       name: item.name,
       main_address: item.main_address,
       description: item.description,
-      owner_id: item.owner_id
+      owner_id: item.owner_id,
+      deleted_at: item.deleted_at
     }
   end
 

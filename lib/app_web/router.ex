@@ -50,7 +50,7 @@ defmodule AppWeb.Router do
     pipe_through :admin_api
 
     scope "/v1/", V1 do
-      resources("/families", FamilyController, only: [:create, :index])
+      resources("/families", FamilyController)
     end
   end
 end

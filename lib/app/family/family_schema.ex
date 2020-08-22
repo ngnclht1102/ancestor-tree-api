@@ -18,6 +18,7 @@ defmodule App.Family.Family do
     field(:name, :string)
     field(:main_address, :string)
     field(:description, :string)
+    field(:deleted_at, :naive_datetime)
 
     timestamps()
 
@@ -30,5 +31,13 @@ defmodule App.Family.Family do
     |> validate_required([:name, :main_address])
     |> validate_length(:name, min: 3)
     |> foreign_key_constraint(:owner_id)
+  end
+
+  def delete_changeset(%__MODULE__{} = model) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+    model
+    |> change()
+    |> put_change(:deleted_at, now)
   end
 end

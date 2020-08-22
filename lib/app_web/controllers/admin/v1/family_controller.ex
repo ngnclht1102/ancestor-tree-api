@@ -12,7 +12,6 @@ defmodule AppWeb.Admin.V1.FamilyController do
     render(conn, "index.json", items: items)
   end
 
-  @spec create(atom | %{assigns: %{current_admin: atom | %{id: any}}}, map) :: any
   def create(conn, params) do
     %{current_admin: current_admin} = conn.assigns
 
@@ -20,4 +19,20 @@ defmodule AppWeb.Admin.V1.FamilyController do
       render(conn, "show.json", item: family)
     end
   end
+
+  def update(conn, %{"id" => id} = params) do
+    with {:ok, family} <- FamilyManager.update_family(id, params) do
+      render(conn, "show.json", item: family)
+    end
+  end
+
+  def update(_, _), do: {:missing_params, [:id]}
+
+  def delete(conn, %{"id" => id}) do
+    with {:ok, family} <- FamilyManager.remove_family(id) do
+      render(conn, "show.json", item: family)
+    end
+  end
+
+  def delete(_, _), do: {:missing_params, [:id]}
 end
