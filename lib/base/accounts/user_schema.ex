@@ -8,9 +8,6 @@ defmodule App.Base.Account.User do
 
   import Ecto.Changeset
 
-  alias App.Base.Ext.Helper.AuthToken
-  alias App.{Repo}
-
   @allow_fields [
     :first_name,
     :last_name,
@@ -50,7 +47,7 @@ defmodule App.Base.Account.User do
     |> validate_changeset(user)
   end
 
-  defp validate_changeset(changeset, user) do
+  defp validate_changeset(changeset, _user) do
     changeset
     |> validate_number(:dob_month, greater_than: 0, less_than: 13)
     |> validate_number(:dob_year, greater_than: 0)

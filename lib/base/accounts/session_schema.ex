@@ -5,7 +5,7 @@ defmodule App.Base.Account.Session do
 
   use Ecto.Schema
 
-  alias Tfw.Account.{User, AdminUser}
+  alias App.Base.Account.{User, AdminUser}
 
   import Ecto.Changeset
 
