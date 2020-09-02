@@ -13,6 +13,12 @@ defmodule AppWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin_owner_api do
+    plug :api
+    plug :admin_api
+    plug App.Plugs.AdminOwnerPlug
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", AppWeb do
   #   pipe_through :api
@@ -46,11 +52,19 @@ defmodule AppWeb.Router do
     get "/", PageController, :index
   end
 
-  scope "/admin", AppWeb.Admin do
+  scope "/admin", AppWeb.Admin, as: :admin do
     pipe_through :admin_api
 
     scope "/v1/", V1 do
       resources("/families", FamilyController)
+    end
+  end
+
+  scope "/admin", AppWeb.Admin, as: :admin do
+    pipe_through :admin_owner_api
+
+    scope "/v1/", V1 do
+      resources("/persons", PersonController)
     end
   end
 end

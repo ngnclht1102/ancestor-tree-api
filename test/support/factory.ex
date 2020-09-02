@@ -6,6 +6,7 @@ defmodule App.Factory do
 
   use App.Factory.{
     AccountFactory,
-    FamilyFactory
+    FamilyFactory,
+    PersonFactory
   }
 end
