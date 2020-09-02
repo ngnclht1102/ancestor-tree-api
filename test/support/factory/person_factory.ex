@@ -3,7 +3,8 @@ defmodule App.Factory.PersonFactory do
   Person Factory for Person schema
   """
   alias App.Person.Person
-  alias Faker.{Lorem, Name}
+  alias Faker.{Lorem}
+  alias Faker.Person, as: FPerson
 
   @spec __using__(any) ::
           {:def, [{:context, App.Factory.PersonFactory} | {:import, Kernel}, ...],
@@ -12,8 +13,8 @@ defmodule App.Factory.PersonFactory do
     quote do
       def person_factory do
         %Person{
-          full_name: Name.name(),
-          nickname: Name.name(),
+          full_name: FPerson.name(),
+          nickname: FPerson.name(),
           family_level: 3,
           sibling_level: 2,
           note: Lorem.Shakespeare.as_you_like_it(),

@@ -4,8 +4,7 @@ defmodule App.Factory.AccountFactory do
   """
   alias App.Base.Account.{AdminUser, Session, User}
   alias App.Base.Ext.Helper.AuthToken
-  import Argon2, only: [add_hash: 1]
-  alias Faker.{Lorem, Name, Internet}
+  alias Faker.{Lorem, Person, Internet}
 
   defmacro __using__(_opts) do
     quote do
@@ -22,8 +21,8 @@ defmodule App.Factory.AccountFactory do
         %User{
           access_token: access_token,
           email: email,
-          first_name: Name.first_name(),
-          last_name: Name.last_name()
+          first_name: Person.first_name(),
+          last_name: Person.last_name()
         }
       end
 

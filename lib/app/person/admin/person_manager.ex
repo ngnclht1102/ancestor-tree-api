@@ -20,7 +20,7 @@ defmodule App.Person.Admin.PersonManager do
     |> Repo.insert()
   end
 
-  def update_person(current_admin, id, params) do
+  def update_person(_current_admin, id, params) do
     person = Person |> Repo.get(id)
 
     if person do

@@ -75,7 +75,7 @@ defmodule App.Person.Person do
     |> put_change(:deleted_at, now)
   end
 
-  defp validate_changeset(changeset, user) do
+  defp validate_changeset(changeset, _user) do
     changeset
     |> validate_number(:dob_date, greater_than: 0, less_than: 31)
     |> validate_number(:dob_month, greater_than: 0, less_than: 13)

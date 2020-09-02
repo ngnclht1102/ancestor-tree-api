@@ -3,7 +3,7 @@ defmodule App.Factory.FamilyFactory do
   Family Factory for family schema
   """
   alias App.Family.Family
-  alias Faker.{Lorem, Name, Address}
+  alias Faker.{Lorem, Person, Address}
 
   @spec __using__(any) ::
           {:def, [{:context, App.Factory.FamilyFactory} | {:import, Kernel}, ...],
@@ -12,7 +12,7 @@ defmodule App.Factory.FamilyFactory do
     quote do
       def family_factory do
         %Family{
-          name: Name.name(),
+          name: Person.name(),
           main_address: "#{Address.city()} #{Address.country()}",
           description: Lorem.Shakespeare.as_you_like_it()
         }
