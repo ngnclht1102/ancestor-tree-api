@@ -27,7 +27,6 @@ defmodule App.Person.Person do
     :family_level,
     :note,
     :is_root,
-
     :father_id,
     :mother_id,
     :spouse_id,
@@ -66,6 +65,14 @@ defmodule App.Person.Person do
     |> cast(attrs, @allow_fields)
     |> validate_required([:family_id, :full_name])
     |> validate_changeset(user)
+  end
+
+  def delete_changeset(%__MODULE__{} = user) do
+    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+    user
+    |> change()
+    |> put_change(:deleted_at, now)
   end
 
   defp validate_changeset(changeset, user) do

@@ -52,13 +52,18 @@ defmodule AppWeb.Router do
     get "/", PageController, :index
   end
 
-  scope "/admin", AppWeb.Admin do
+  scope "/admin", AppWeb.Admin, as: :admin do
     pipe_through :admin_api
 
     scope "/v1/", V1 do
-      pipe_through :admin_owner_api
-
       resources("/families", FamilyController)
+    end
+  end
+
+  scope "/admin", AppWeb.Admin, as: :admin do
+    pipe_through :admin_owner_api
+
+    scope "/v1/", V1 do
       resources("/persons", PersonController)
     end
   end

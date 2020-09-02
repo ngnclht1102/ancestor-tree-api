@@ -11,17 +11,19 @@ defmodule AppWeb.Admin.V1.PersonControllerTest do
         params.email,
         params.password
       )
+
     family = insert(:family, owner_id: admin_user.id)
 
     {:ok, %{admin_user: admin_user, family: family}}
   end
 
-  describe "family" do
-    test "POST /admin/v1/persons create family",
+  describe "person" do
+    test "POST /admin/v1/persons create person",
          %{admin_user: admin_user, family: family} do
-      params = Map.merge(params_for(:person), %{
-        family_id: family.id
-      })
+      params =
+        Map.merge(params_for(:person), %{
+          family_id: family.id
+        })
 
       res =
         build_conn()
@@ -37,39 +39,50 @@ defmodule AppWeb.Admin.V1.PersonControllerTest do
       assert res["data"]
     end
 
-  #   test "GET /admin/v1/persons list families of current owner",
-  #        %{admin_user: admin_user, family: family} do
-  #     family_params = params_for(:family)
+    test "GET /admin/v1/persons list person of given family",
+         %{admin_user: admin_user, family: family} do
+      params =
+        Map.merge(params_for(:person), %{
+          family_id: family.id
+        })
 
-  #     build_conn()
-  #     |> put_req_header("accept", "application/json")
-  #     |> put_req_header("x-access-token", admin_user.access_token)
-  #     |> post("/admin/v1/persons", family_params)
-  #     |> json_response(200)
+      _created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post("/admin/v1/persons", params)
+        |> json_response(200)
 
-  #     res =
-  #       build_conn()
-  #       |> put_req_header("accept", "application/json")
-  #       |> put_req_header("x-access-token", admin_user.access_token)
-  #       |> get("/admin/v1/persons")
-  #       |> doc(
-  #         description: "List family of current owner",
-  #         operation_id: "list_family"
-  #       )
-  #       |> json_response(200)
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> get("/admin/v1/persons?family_id=#{family.id}")
+        |> doc(
+          description: "List person of given family id",
+          operation_id: "list_person"
+        )
+        |> json_response(200)
 
-  #     assert res["data"]
-  #   end
+      assert res["data"]
+      [fisrt | _] = res["data"]
+      assert fisrt["id"]
+    end
 
     test "PUT /admin/v1/persons/:id update person",
-        %{admin_user: admin_user, family: family} do
+         %{admin_user: admin_user, family: family} do
       person_params = params_for(:person)
 
       created_res =
         build_conn()
         |> put_req_header("accept", "application/json")
         |> put_req_header("x-access-token", admin_user.access_token)
-        |> post("/admin/v1/persons", person_params)
+        |> post(
+          "/admin/v1/persons",
+          Map.merge(person_params, %{
+            "family_id" => family.id
+          })
+        )
         |> json_response(200)
 
       id = created_res["data"]["id"]
@@ -95,40 +108,42 @@ defmodule AppWeb.Admin.V1.PersonControllerTest do
       assert res["data"]["full_name"] == "Edited name"
     end
 
-  # test "DELETE /admin/v1/persons/:id delete family",
-  #      %{admin_user: admin_user, family: family} do
-  #   family_params = params_for(:family)
+    test "DELETE /admin/v1/persons/:id delete person",
+         %{admin_user: admin_user, family: family} do
+      person_params = params_for(:person)
 
-  #   created_res =
-  #     build_conn()
-  #     |> put_req_header("accept", "application/json")
-  #     |> put_req_header("x-access-token", admin_user.access_token)
-  #     |> post("/admin/v1/persons", family_params)
-  #     |> json_response(200)
+      created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post(
+          "/admin/v1/persons",
+          Map.merge(person_params, %{
+            "family_id" => family.id
+          })
+        )
+        |> json_response(200)
 
-  #   id = created_res["data"]["id"]
+      id = created_res["data"]["id"]
 
-  #   res =
-  #     build_conn()
-  #     |> put_req_header("accept", "application/json")
-  #     |> put_req_header("x-access-token", admin_user.access_token)
-  #     |> delete("/admin/v1/persons/#{id}")
-  #     |> doc(
-  #       description: "delete family",
-  #       operation_id: "delete_family"
-  #     )
-  #     |> json_response(200)
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> delete(
+          "/admin/v1/persons/#{id}",
+          Map.merge(person_params, %{
+            "family_id" => family.id
+          })
+        )
+        |> doc(
+          description: "delete person",
+          operation_id: "delete_person"
+        )
+        |> json_response(200)
 
-  #   assert res["data"]
-  #   assert res["data"]["deleted_at"]
-
-  #   list_res =
-  #     build_conn()
-  #     |> put_req_header("accept", "application/json")
-  #     |> put_req_header("x-access-token", admin_user.access_token)
-  #     |> get("/admin/v1/persons")
-  #     |> json_response(200)
-
-  #   assert list_res["data"] == []
+      assert res["data"]
+      assert res["data"]["deleted_at"]
+    end
   end
 end

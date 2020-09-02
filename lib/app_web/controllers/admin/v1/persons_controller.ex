@@ -4,13 +4,12 @@ defmodule AppWeb.Admin.V1.PersonController do
 
   action_fallback(App.Base.Ext.Controller.FallbackController)
 
-  # def index(conn, params) do
-  #   %{current_admin: current_admin} = conn.assigns
+  def index(conn, params) do
+    %{current_family: current_family} = conn.assigns
+    items = PersonManager.list_person_of_given_family(current_family, params)
 
-  #   items = FamilyManager.list_families_of_an_owner(current_admin, params)
-
-  #   render(conn, "index.json", items: items)
-  # end
+    render(conn, "index.json", items: items)
+  end
 
   def create(conn, params) do
     %{current_admin: current_admin} = conn.assigns
@@ -21,18 +20,20 @@ defmodule AppWeb.Admin.V1.PersonController do
   end
 
   def update(conn, %{"id" => id} = params) do
-    with {:ok, person} <- PersonManager.update_person(id, params) do
+    %{current_admin: current_admin} = conn.assigns
+
+    with {:ok, person} <- PersonManager.update_person(current_admin, id, params) do
       render(conn, "show.json", item: person)
     end
   end
 
   def update(_, _), do: {:missing_params, [:id]}
 
-  # def delete(conn, %{"id" => id}) do
-  #   with {:ok, family} <- FamilyManager.remove_family(id) do
-  #     render(conn, "show.json", item: family)
-  #   end
-  # end
+  def delete(conn, %{"id" => id}) do
+    with {:ok, person} <- PersonManager.remove_person(id) do
+      render(conn, "show.json", item: person)
+    end
+  end
 
-  # def delete(_, _), do: {:missing_params, [:id]}
+  def delete(_, _), do: {:missing_params, [:id]}
 end
