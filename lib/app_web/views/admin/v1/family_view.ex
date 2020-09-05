@@ -20,7 +20,8 @@ defmodule AppWeb.Admin.V1.FamilyView do
 
   def render("index.json", %{items: items}) do
     %{
-      data: render_many(items, __MODULE__, "family.json", as: :item)
+      data: render_many(items, __MODULE__, "family.json", as: :item),
+      total: 20
     }
   end
 end

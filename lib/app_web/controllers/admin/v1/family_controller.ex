@@ -4,12 +4,16 @@ defmodule AppWeb.Admin.V1.FamilyController do
 
   action_fallback(App.Base.Ext.Controller.FallbackController)
 
+  @spec index(Plug.Conn.t(), nil | maybe_improper_list | map) :: Plug.Conn.t()
   def index(conn, params) do
     %{current_admin: current_admin} = conn.assigns
+    %{ count: count, records: records}  = FamilyManager.list_families_of_an_owner(current_admin, params)
 
-    items = FamilyManager.list_families_of_an_owner(current_admin, params)
-
-    render(conn, "index.json", items: items)
+    %{ page_size: page_size, page_number: _page_number, offset: offset } = App.Repo.paginate_params(params)
+    conn
+    |> put_resp_header("content-range", "items #{offset}-#{page_size}/#{count}")
+    |> put_resp_header("Access-Control-Expose-Headers", "Content-Range")
+    |> render( "index.json", items: records)
   end
 
   def create(conn, params) do

@@ -1,7 +1,7 @@
 defmodule AppWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :app
 
-  plug CORSPlug, origin: "*"
+  plug CORSPlug, origin: ["*"], headers: ["Authorization", "Content-Type", "Accept", "Origin", "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken", "Keep-Alive", "X-Requested-With", "If-Modified-Since", "X-CSRF-Token", "Content-Range", "Referer", "range", "x-access-token"]
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.

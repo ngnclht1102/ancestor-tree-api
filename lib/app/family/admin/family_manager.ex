@@ -41,11 +41,14 @@ defmodule App.Family.Admin.FamilyManager do
   end
 
   def list_families_of_an_owner(current_admin, params) do
-    from(
+    query = from(
       f in Family,
       where: f.owner_id == ^current_admin.id,
       where: is_nil(f.deleted_at)
     )
+    count = query |> Repo.aggregate(:count, :id)
+    records = query
     |> Repo.paginate(params)
+    %{ count: count, records: records }
   end
 end
