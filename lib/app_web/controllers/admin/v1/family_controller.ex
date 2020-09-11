@@ -27,11 +27,10 @@ defmodule AppWeb.Admin.V1.FamilyController do
   def show(conn, %{"id" => id}) do
     %{current_admin: current_admin} = conn.assigns
 
-    family = FamilyManager.load_family(current_admin, id)
-    case family do
+    case FamilyManager.load_family(current_admin, id) do
       nil -> {:error, :not_found}
-      _ ->
-      render(conn, "show.json", item: family)
+      any ->
+      render(conn, "show.json", item: any)
     end
   end
 
