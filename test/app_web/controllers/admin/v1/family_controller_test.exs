@@ -90,42 +90,69 @@ defmodule AppWeb.Admin.V1.FamilyControllerTest do
       assert res["data"]
       assert res["data"]["name"] == "Edited name"
     end
-  end
 
-  test "DELETE /admin/v1/families/:id delete family",
-       %{admin_user: admin_user} do
-    family_params = params_for(:family)
+    test "DELETE /admin/v1/families/:id delete family",
+         %{admin_user: admin_user} do
+      family_params = params_for(:family)
 
-    created_res =
-      build_conn()
-      |> put_req_header("accept", "application/json")
-      |> put_req_header("x-access-token", admin_user.access_token)
-      |> post("/admin/v1/families", family_params)
-      |> json_response(200)
+      created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post("/admin/v1/families", family_params)
+        |> json_response(200)
 
-    id = created_res["data"]["id"]
+      id = created_res["data"]["id"]
 
-    res =
-      build_conn()
-      |> put_req_header("accept", "application/json")
-      |> put_req_header("x-access-token", admin_user.access_token)
-      |> delete("/admin/v1/families/#{id}")
-      |> doc(
-        description: "delete family",
-        operation_id: "delete_family"
-      )
-      |> json_response(200)
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> delete("/admin/v1/families/#{id}")
+        |> doc(
+          description: "delete family",
+          operation_id: "delete_family"
+        )
+        |> json_response(200)
 
-    assert res["data"]
-    assert res["data"]["deleted_at"]
+      assert res["data"]
+      assert res["data"]["deleted_at"]
 
-    list_res =
-      build_conn()
-      |> put_req_header("accept", "application/json")
-      |> put_req_header("x-access-token", admin_user.access_token)
-      |> get("/admin/v1/families")
-      |> json_response(200)
+      list_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> get("/admin/v1/families")
+        |> json_response(200)
 
-    assert list_res["data"] == []
+      assert list_res["data"] == []
+    end
+
+    test "DELETE /admin/v1/families/:id get family",
+         %{admin_user: admin_user} do
+      family_params = params_for(:family)
+
+      created_res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> post("/admin/v1/families", family_params)
+        |> json_response(200)
+
+      id = created_res["data"]["id"]
+
+      res =
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("x-access-token", admin_user.access_token)
+        |> get("/admin/v1/families/#{id}")
+        |> doc(
+          description: "show family",
+          operation_id: "show_family"
+        )
+        |> json_response(200)
+
+      assert res["data"]
+    end
   end
 end
