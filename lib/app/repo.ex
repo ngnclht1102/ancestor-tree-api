@@ -16,10 +16,6 @@ defmodule App.Repo do
       sort_field: sort_field
     } = paginate_params(opts)
 
-    IO.puts("======================")
-    IO.inspect(paginate_params(opts))
-    IO.puts("======================")
-
     query
     |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
     |> limit(^page_size)
