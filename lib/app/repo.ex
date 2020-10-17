@@ -16,8 +16,12 @@ defmodule App.Repo do
       sort_field: sort_field
     } = paginate_params(opts)
 
+    IO.puts("======================")
+    IO.inspect(paginate_params(opts))
+    IO.puts("======================")
+
     query
-    |> order_by(^sort(%{sort_direction: sort_direction, sort_field: sort_field}))
+    |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
     |> limit(^page_size)
     |> offset(^offset)
     |> all()
@@ -69,12 +73,12 @@ defmodule App.Repo do
   def get_page(number) when is_integer(number), do: number
   def get_page(_), do: 1
 
-  def get_sort_field(field) when is_binary(field), do: String.to_atom(field)
-  def get_sort_field(_), do: :id
+  def get_sort_field(field) when is_binary(field), do: field
+  def get_sort_field(_), do: "id"
 
   def get_sort_direction(direction)
-      when is_binary(direction) and (direction == "asc" or direction == "desc"),
-      do: String.to_atom(String.downcase(direction))
+      when direction == "asc" or direction == "desc" or direction == "ASC" or direction == "DESC",
+      do: direction
 
-  def get_sort_direction(_), do: :asc
+  def get_sort_direction(_), do: "asc"
 end
