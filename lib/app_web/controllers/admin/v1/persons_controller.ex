@@ -6,9 +6,17 @@ defmodule AppWeb.Admin.V1.PersonController do
 
   def index(conn, params) do
     %{current_family: current_family} = conn.assigns
-    items = PersonManager.list_person_of_given_family(current_family, params)
 
-    render(conn, "index.json", items: items)
+    %{count: count, records: records} =
+      PersonManager.list_person_of_given_family(current_family, params)
+
+    %{page_size: page_size, page_number: _page_number, offset: offset} =
+      App.Repo.paginate_params(params)
+
+    conn
+    |> put_resp_header("content-range", "items #{offset}-#{page_size}/#{count}")
+    |> put_resp_header("Access-Control-Expose-Headers", "Content-Range")
+    |> render("index.json", items: records)
   end
 
   def create(conn, params) do

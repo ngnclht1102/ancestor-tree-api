@@ -35,12 +35,16 @@ defmodule App.Person.Admin.PersonManager do
   end
 
   def list_person_of_given_family(current_family, params) do
-    from(
-      p in Person,
-      where: is_nil(p.deleted_at),
-      where: p.family_id == ^current_family.id
-    )
-    |> Repo.paginate(params)
+    query =
+      from(
+        p in Person,
+        where: is_nil(p.deleted_at),
+        where: p.family_id == ^current_family.id
+      )
+
+    records = query |> Repo.paginate(params)
+    count = query |> Repo.aggregate(:count, :id)
+    %{count: count, records: records}
   end
 
   def remove_person(id) do

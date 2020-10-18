@@ -22,10 +22,14 @@ defmodule App.Plugs.AdminOwnerPlug do
       if family_id do
         conn |> check_family(family_id, current_admin)
       else
-        person = Person |> Repo.get(person_id)
+        if family_id do
+          person = Person |> Repo.get(person_id)
 
-        if not is_nil(person) do
-          conn |> check_family(person.family_id, current_admin)
+          if not is_nil(person) do
+            conn |> check_family(person.family_id, current_admin)
+          else
+            render_unauthorized(conn)
+          end
         else
           render_unauthorized(conn)
         end
@@ -47,7 +51,7 @@ defmodule App.Plugs.AdminOwnerPlug do
 
   def render_unauthorized(conn) do
     conn
-    |> put_status(:unauthorized)
+    |> put_status(:forbidden)
     |> json(%{message: "Unauthorized access, you are not authorized to access this family"})
     |> halt()
   end
