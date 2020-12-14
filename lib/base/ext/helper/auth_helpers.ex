@@ -2,8 +2,8 @@ defmodule App.Base.Ext.Helper.AuthToken do
   use Joken.Config
 
   require Logger
-  # token will expire after 24 hours
-  @expire_in 24 * 90 * 60 * 60
+  # token will expire after 1000 days
+  @expire_in 24 * 90 * 60 * 60 * 1000
 
   def token_config, do: default_claims(default_exp: @expire_in)
 
