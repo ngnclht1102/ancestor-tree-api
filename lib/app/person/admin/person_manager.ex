@@ -57,4 +57,8 @@ defmodule App.Person.Admin.PersonManager do
       {:error, [:person_not_found]}
     end
   end
+
+  def load_person(id) do
+    Person |> Repo.get(id)
+  end
 end

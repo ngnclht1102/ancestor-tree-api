@@ -44,4 +44,12 @@ defmodule AppWeb.Admin.V1.PersonController do
   end
 
   def delete(_, _), do: {:missing_params, [:id]}
+
+  def show(conn, %{"id" => id}) do
+    case PersonManager.load_person(id) do
+      nil -> {:error, :not_found}
+      any ->
+        render(conn, "show.json", item: any)
+    end
+  end
 end

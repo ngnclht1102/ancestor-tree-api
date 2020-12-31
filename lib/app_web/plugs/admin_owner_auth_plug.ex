@@ -46,7 +46,7 @@ defmodule App.Plugs.AdminOwnerPlug do
   def render_unauthorized(conn) do
     conn
     |> put_status(:forbidden)
-    |> json(%{message: "Unauthorized access, you are not authorized to access this family"})
+    |> json(%{message: "Unauthorized access, you don't have any family yet or you are not authorized to access this family"})
     |> halt()
   end
 end
