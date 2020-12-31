@@ -5,7 +5,7 @@ defmodule App.Base.Account.Session do
 
   use Ecto.Schema
 
-  alias App.Base.Account.{User, AdminUser}
+  alias App.Base.Account.{User, AdminUser, AppUser}
 
   import Ecto.Changeset
 
@@ -27,6 +27,7 @@ defmodule App.Base.Account.Session do
 
     belongs_to(:user, User)
     belongs_to(:admin_user, AdminUser)
+    belongs_to(:app_user, AppUser)
   end
 
   def changeset(%__MODULE__{} = session, attrs) do
