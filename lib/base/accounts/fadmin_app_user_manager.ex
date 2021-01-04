@@ -1,6 +1,6 @@
-defmodule App.Base.Account.AppUserManager do
+defmodule App.Base.Account.AdminAppUserManager do
   @moduledoc """
-  user manager
+  app user manager for ADMIN only
   """
 
   alias App.Base.Ext.Helper.AuthToken
@@ -10,6 +10,7 @@ defmodule App.Base.Account.AppUserManager do
 
   alias Ecto.Multi
 
+  import Ecto.Query, only: [from: 2]
 
   def verify_admin_user(%AdminUser{} = user, password) do
     user
@@ -20,13 +21,14 @@ defmodule App.Base.Account.AppUserManager do
 
   def get_app_by_email(email), do: Repo.get_by(AppUser, email: email)
 
-  def create_app_user(email, password) do
+  def create_app_user(email, password, family_id, name) do
     {:ok, access_token, _} = AuthManager.generate_access_token(email)
 
     user_changeset =
       User.create_changeset(
         %User{},
         %{
+          full_name: name,
           email: email,
           password: password,
           access_token: access_token
@@ -39,9 +41,10 @@ defmodule App.Base.Account.AppUserManager do
       AppUser.changeset(%AppUser{}, %{
         user_id: user.id,
         access_token: access_token,
+        name: name,
+        family_id: family_id,
         email: email,
         role: AppUser.appuser_role(),
-        name: "#{user.first_name} #{user.last_name}",
         password: password
       })
     end)
@@ -53,5 +56,41 @@ defmodule App.Base.Account.AppUserManager do
       })
     end)
     |> Repo.transaction()
+  end
+
+  def list_appusers_of_given_family(current_family, params) do
+    query = from(
+      au in AppUser,
+      where: au.family_id == ^current_family.id,
+      where: is_nil(au.deleted_at)
+    )
+
+    records = query |> Repo.paginate(params)
+    count = query |> Repo.aggregate(:count, :id)
+    %{count: count, records: records}
+  end
+
+  def load_appuser(id) do
+    AppUser |> Repo.get(id)
+  end
+
+  def update_appuser(id, params) do
+    appuser = AppUser |> Repo.get(id)
+    if appuser do
+      changeset = AppUser.admin_update_changeset(appuser, params)
+      changeset |> Repo.update
+    else
+      {:notfound}
+    end
+  end
+
+  def delete_appuser(id) do
+    appuser = AppUser |> Repo.get(id)
+    if appuser do
+      changeset = AppUser.admin_delete_changeset(appuser)
+      changeset |> Repo.update
+    else
+      {:notfound}
+    end
   end
 end
