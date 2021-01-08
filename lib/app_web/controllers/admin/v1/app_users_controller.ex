@@ -1,6 +1,6 @@
-defmodule AppWeb.Admin.V1.PersonController do
+defmodule AppWeb.Admin.V1.AppUserController do
   use AppWeb, :controller
-  alias App.Person.Admin.PersonManager
+  alias App.Base.Account.AdminAppUserManager
 
   action_fallback(App.Base.Ext.Controller.FallbackController)
 
@@ -8,7 +8,7 @@ defmodule AppWeb.Admin.V1.PersonController do
     %{current_family: current_family} = conn.assigns
 
     %{count: count, records: records} =
-      PersonManager.list_person_of_given_family(current_family, params)
+      AdminAppUserManager.list_appusers_of_given_family(current_family, params)
 
     %{page_size: page_size, page_number: _page_number, offset: offset} =
       App.Repo.paginate_params(params)
@@ -19,34 +19,33 @@ defmodule AppWeb.Admin.V1.PersonController do
     |> render("index.json", items: records)
   end
 
-  def create(conn, params) do
-    %{current_admin: current_admin} = conn.assigns
-
-    with {:ok, person} <- PersonManager.create_new_person(current_admin, params) do
-      render(conn, "show.json", item: person)
+  def create(conn, %{ "email" => email, "password" => password, "family_id" => family_id, "name" => name}) do
+    with {
+      :ok,
+      %{ app_user: app_user, session: _session, user: _user
+    }} <- AdminAppUserManager.create_app_user(email, password, family_id, name) do
+      render(conn, "show.json", item: app_user)
     end
   end
 
   def update(conn, %{"id" => id} = params) do
-    %{current_admin: current_admin} = conn.assigns
-
-    with {:ok, person} <- PersonManager.update_person(current_admin, id, params) do
-      render(conn, "show.json", item: person)
+    with {:ok, appuser} <- AdminAppUserManager.update_appuser(id, params) do
+      render(conn, "show.json", item: appuser)
     end
   end
 
   def update(_, _), do: {:missing_params, [:id]}
 
   def delete(conn, %{"id" => id}) do
-    with {:ok, person} <- PersonManager.remove_person(id) do
-      render(conn, "show.json", item: person)
+    with {:ok, appuser} <- AdminAppUserManager.delete_appuser(id) do
+      render(conn, "show.json", item: appuser)
     end
   end
 
   def delete(_, _), do: {:missing_params, [:id]}
 
   def show(conn, %{"id" => id}) do
-    case PersonManager.load_person(id) do
+    case AdminAppUserManager.load_appuser(id) do
       nil -> {:error, :not_found}
       any ->
         render(conn, "show.json", item: any)

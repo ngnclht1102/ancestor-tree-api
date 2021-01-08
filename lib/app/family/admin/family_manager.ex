@@ -7,6 +7,14 @@ defmodule App.Family.Admin.FamilyManager do
 
   import Ecto.Query, only: [from: 2]
 
+  def load_family(current_admin, id) do
+    from(
+      f in Family,
+      where: f.id == ^id,
+      where: is_nil(f.deleted_at),
+    ) |> Repo.one()
+  end
+
   def create_new_family(current_admin, params) do
     Family.changeset(
       %Family{},

@@ -9,7 +9,7 @@ defmodule App.Base.Account.AuthManager do
 
   alias Ecto.Multi
 
-  defp generate_access_token(email) do
+  def generate_access_token(email) do
     AuthToken.generate_and_sign(%{"email" => email})
   end
 

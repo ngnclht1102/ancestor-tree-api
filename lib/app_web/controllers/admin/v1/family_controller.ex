@@ -24,6 +24,16 @@ defmodule AppWeb.Admin.V1.FamilyController do
     end
   end
 
+  def show(conn, %{"id" => id}) do
+    %{current_admin: current_admin} = conn.assigns
+
+    case FamilyManager.load_family(current_admin, id) do
+      nil -> {:error, :not_found}
+      any ->
+      render(conn, "show.json", item: any)
+    end
+  end
+
   def update(conn, %{"id" => id} = params) do
     with {:ok, family} <- FamilyManager.update_family(id, params) do
       render(conn, "show.json", item: family)

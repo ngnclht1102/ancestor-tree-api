@@ -10,6 +10,9 @@ use Mix.Config
 config :app,
   ecto_repos: [App.Repo]
 
+config :plug,
+  validate_header_keys_during_test: false
+
 # Configures the endpoint
 config :app, AppWeb.Endpoint,
   url: [host: "localhost"],
