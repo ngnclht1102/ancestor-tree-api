@@ -66,6 +66,7 @@ defmodule AppWeb.Router do
     scope "/v1/", V1 do
       resources("/persons", PersonController)
       resources("/appusers", AppUserController)
+      resources("/events", EventController)
     end
   end
 end
