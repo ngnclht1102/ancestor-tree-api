@@ -1,4 +1,4 @@
-defmodule App.Repo.Migrations.AddFamilyIdToUserTable do
+defmodule App.Repo.Migrations.CreateEventsTable do
   use Ecto.Migration
 
   def change do
@@ -13,7 +13,6 @@ defmodule App.Repo.Migrations.AddFamilyIdToUserTable do
       add(:dt_year, :integer)
       add(:time, :time)
       add(:deleted_at, :naive_datetime)
-      add(:repeat, :boolean, default: false)
       add(:repeat_times, :integer, default: 1)
       add(:repeat_type, :string, default: "no-repeat")
 

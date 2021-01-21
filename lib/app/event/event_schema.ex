@@ -16,7 +16,6 @@ defmodule App.Event.Event do
     :dt_month,
     :dt_year,
     :time,
-    :repeat,
     :repeat_times,
     :repeat_type,
     :owner_id,
@@ -32,7 +31,6 @@ defmodule App.Event.Event do
     field(:dt_year, :integer)
     field(:time, :time)
     field(:deleted_at, :naive_datetime)
-    field(:repeat, :boolean)
     field(:repeat_times, :integer)
     field(:repeat_type, :string)
 
@@ -53,11 +51,12 @@ defmodule App.Event.Event do
   end
 
   def validate_repeat_changeset(
-    %Ecto.Changeset{
-      valid?: true,
-      changes: %{ repeat_type: repeat_type }
-    } = changeset
-  ) when repeat_type == "no-repeat" do
+        %Ecto.Changeset{
+          valid?: true,
+          changes: %{repeat_type: repeat_type}
+        } = changeset
+      )
+      when repeat_type == "no-repeat" do
     changeset |> validate_required([:dt_year])
   end
 
