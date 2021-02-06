@@ -30,7 +30,7 @@ defmodule AppWeb.Admin.V1.EventController do
   def update(conn, %{"id" => id} = params) do
     %{current_admin: current_admin} = conn.assigns
 
-    with {:ok, event} <- EventManager.update_person(current_admin, id, params) do
+    with {:ok, event} <- EventManager.update_event(id, params) do
       render(conn, "show.json", item: event)
     end
   end
@@ -38,7 +38,7 @@ defmodule AppWeb.Admin.V1.EventController do
   def update(_, _), do: {:missing_params, [:id]}
 
   def delete(conn, %{"id" => id}) do
-    with {:ok, event} <- EventManager.remove_person(id) do
+    with {:ok, event} <- EventManager.remove_event(id) do
       render(conn, "show.json", item: event)
     end
   end
@@ -46,8 +46,10 @@ defmodule AppWeb.Admin.V1.EventController do
   def delete(_, _), do: {:missing_params, [:id]}
 
   def show(conn, %{"id" => id}) do
-    case EventManager.load_person(id) do
-      nil -> {:error, :not_found}
+    case EventManager.load_event(id) do
+      nil ->
+        {:error, :not_found}
+
       any ->
         render(conn, "show.json", item: any)
     end

@@ -18,7 +18,7 @@ defmodule App.Event.Event do
     :time,
     :repeat_times,
     :repeat_type,
-    :owner_id,
+    :created_by_id,
     :family_id
   ]
 

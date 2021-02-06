@@ -16,7 +16,6 @@ defmodule AppWeb.Admin.V1.EventView do
       dt_date: item.dt_date,
       dt_month: item.dt_month,
       dt_year: item.dt_year,
-      repeat: item.repeat,
       repeat_times: item.repeat_times,
       repeat_type: item.repeat_type,
       family_id: item.family_id
