@@ -1,4 +1,4 @@
-defmodule App.Repo.Migrations.AddFamilyIdToUserTable do
+defmodule App.Repo.Migrations.AddAppUseToSessionTable do
   use Ecto.Migration
 
   def change do
