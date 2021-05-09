@@ -64,6 +64,8 @@ defmodule AppWeb.Router do
     pipe_through :admin_owner_api
 
     scope "/v1/", V1 do
+      get("/persons/tree/from/:from_person_id", PersonController, :tree_from)
+      get("/persons/tree", PersonController, :tree)
       resources("/persons", PersonController)
       resources("/appusers", AppUserController)
       resources("/events", EventController)
