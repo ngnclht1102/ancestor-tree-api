@@ -7,6 +7,15 @@ defmodule AppWeb.Admin.V1.PersonView do
     }
   end
 
+  def render("spouse_in_tree.json", %{item: item}) do
+    %{
+      id: item.id,
+      name: item.full_name,
+      full_name: item.full_name,
+      nickname: item.nickname
+    }
+  end
+
   def render("person.json", %{item: item}) do
     %{
       id: item.id,
@@ -35,6 +44,19 @@ defmodule AppWeb.Admin.V1.PersonView do
     }
   end
 
+  def render("person_in_tree.json", %{item: item}) do
+    %{
+      id: item.id,
+      name: item.full_name,
+      full_name: item.full_name,
+      nickname: item.nickname,
+      gender: item.gender,
+      sibling_level: item.sibling_level,
+      spouse:
+        item.spouse_id && render_one(item.spouse, __MODULE__, "spouse_in_tree.json", as: :item)
+    }
+  end
+
   def render("index.json", %{items: items}) do
     %{
       data: render_many(items, __MODULE__, "person.json", as: :item)
@@ -51,7 +73,7 @@ defmodule AppWeb.Admin.V1.PersonView do
                 Map.put(
                   acc,
                   "child_#{item.id}",
-                  render_one(item, __MODULE__, "person.json", as: :item)
+                  render_one(item, __MODULE__, "person_in_tree.json", as: :item)
                 )
               end)
           },

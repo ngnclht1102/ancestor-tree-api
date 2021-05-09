@@ -18,6 +18,19 @@ defmodule App.Person.Admin.PersonManager do
       )
     )
     |> Repo.insert()
+    |> update_spouse_id_for_partner
+  end
+
+  # both wife and husband need to have spouse id, so need to update the partner
+  def update_spouse_id_for_partner(result) do
+    with {:ok, person} <- result do
+      Person
+      |> Repo.get(person.spouse_id)
+      |> Person.changeset(%{spouse_id: person.id})
+      |> Repo.update()
+    end
+
+    result
   end
 
   def update_person(_current_admin, id, params) do
@@ -29,6 +42,7 @@ defmodule App.Person.Admin.PersonManager do
         params
       )
       |> Repo.update()
+      |> update_spouse_id_for_partner
     else
       {:error, [:person_not_found]}
     end
