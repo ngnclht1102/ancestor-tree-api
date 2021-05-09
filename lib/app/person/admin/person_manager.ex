@@ -7,13 +7,14 @@ defmodule App.Person.Admin.PersonManager do
 
   import Ecto.Query, only: [from: 2]
 
-  def create_new_person(current_admin, params) do
+  def create_new_person(current_family, current_admin, params) do
     Person.changeset(
       %Person{},
       Map.merge(
         params,
         %{
-          "created_by_id" => current_admin.id
+          "created_by_id" => current_admin.id,
+          "family_id" => current_family.id
         }
       )
     )
@@ -23,7 +24,8 @@ defmodule App.Person.Admin.PersonManager do
 
   # both wife and husband need to have spouse id, so need to update the partner
   def update_spouse_id_for_partner(result) do
-    with {:ok, person} <- result do
+    with {:ok, person} <- result,
+         true <- not is_nil(person.spouse_id) do
       Person
       |> Repo.get(person.spouse_id)
       |> Person.changeset(%{spouse_id: person.id})
@@ -112,7 +114,6 @@ defmodule App.Person.Admin.PersonManager do
         p in Person,
         where: is_nil(p.deleted_at),
         where: p.family_id == ^current_family.id,
-        where: p.is_root == false,
         where: p.father_id == ^person.id
       )
 

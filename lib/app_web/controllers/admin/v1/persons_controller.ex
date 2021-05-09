@@ -20,9 +20,9 @@ defmodule AppWeb.Admin.V1.PersonController do
   end
 
   def create(conn, params) do
-    %{current_admin: current_admin} = conn.assigns
+    %{current_admin: current_admin, current_family: current_family} = conn.assigns
 
-    with {:ok, person} <- PersonManager.create_new_person(current_admin, params) do
+    with {:ok, person} <- PersonManager.create_new_person(current_family, current_admin, params) do
       render(conn, "show.json", item: person)
     end
   end
