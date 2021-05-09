@@ -10,6 +10,7 @@ defmodule AppWeb.Admin.V1.PersonView do
   def render("person.json", %{item: item}) do
     %{
       id: item.id,
+      name: item.full_name,
       full_name: item.full_name,
       nickname: item.nickname,
       gender: item.gender,
@@ -37,6 +38,25 @@ defmodule AppWeb.Admin.V1.PersonView do
   def render("index.json", %{items: items}) do
     %{
       data: render_many(items, __MODULE__, "person.json", as: :item)
+    }
+  end
+
+  def render("tree.json", %{root: root, children: children}) do
+    %{
+      data:
+        Map.merge(
+          %{
+            children:
+              Enum.reduce(children, %{}, fn item, acc ->
+                Map.put(
+                  acc,
+                  "child_#{item.id}",
+                  render_one(item, __MODULE__, "person.json", as: :item)
+                )
+              end)
+          },
+          render_one(root, __MODULE__, "person.json", as: :item)
+        )
     }
   end
 end

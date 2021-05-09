@@ -47,9 +47,30 @@ defmodule AppWeb.Admin.V1.PersonController do
 
   def show(conn, %{"id" => id}) do
     case PersonManager.load_person(id) do
-      nil -> {:error, :not_found}
+      nil ->
+        {:error, :not_found}
+
       any ->
         render(conn, "show.json", item: any)
     end
+  end
+
+  def tree(conn, params) do
+    %{current_family: current_family} = conn.assigns
+
+    %{root: root, children: children} = PersonManager.load_tree_of_family(current_family)
+
+    conn
+    |> render("tree.json", root: root, children: children)
+  end
+
+  def tree_from(conn, %{"from_person_id" => from_person_id}) do
+    %{current_family: current_family} = conn.assigns
+
+    %{root: root, children: children} =
+      PersonManager.load_tree_of_family(from_person_id, current_family)
+
+    conn
+    |> render("tree.json", root: root, children: children)
   end
 end
