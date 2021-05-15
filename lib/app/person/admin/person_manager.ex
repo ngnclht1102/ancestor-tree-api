@@ -22,10 +22,27 @@ defmodule App.Person.Admin.PersonManager do
     |> update_spouse_id_for_partner
   end
 
+  # TODO: fix the query
   # both wife and husband need to have spouse id, so need to update the partner
+  # case: if set a wrong spouse, so we need to make changes, first, we need to clear all
   def update_spouse_id_for_partner(result) do
     with {:ok, person} <- result,
          true <- not is_nil(person.spouse_id) do
+      # remove links
+      old_spouse_ids =
+        from(
+          u in Person,
+          where: u.spouse_id == ^person.id,
+          where: u.id != ^person.spouse_id
+        )
+        |> Repo.all
+        |> Enum.map(fn x -> x.id end)
+      from(
+        u in Person,
+        where: u.id in ^old_spouse_ids
+      )
+      |> Repo.update_all(set: [ spouse_id: nil ])
+
       Person
       |> Repo.get(person.spouse_id)
       |> Person.changeset(%{spouse_id: person.id})
