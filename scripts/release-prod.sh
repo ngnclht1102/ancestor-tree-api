@@ -1,5 +1,4 @@
-cd ..
 mix clean
-source .env
+source ../.env
 mix compile
 MIX_ENV=prod mix release
