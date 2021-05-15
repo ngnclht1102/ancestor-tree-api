@@ -85,7 +85,6 @@ defmodule App.Person.Person do
     |> validate_number(:dod_year, greater_than: 0)
     |> update_change(:gender, &String.downcase/1)
     |> validate_inclusion(:gender, ~w(male female others))
-    |> update_change(:nickname, &String.trim/1)
     |> foreign_key_constraint(:father_id)
     |> foreign_key_constraint(:mother_id)
     |> foreign_key_constraint(:spouse_id)
