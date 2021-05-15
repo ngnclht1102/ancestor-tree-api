@@ -1,3 +1,4 @@
+cd ..
 mix clean
 source .env
 mix compile
