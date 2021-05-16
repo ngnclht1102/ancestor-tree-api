@@ -26,7 +26,7 @@ defmodule App.Factory.PersonFactory do
           dod_month: 1,
           dod_year: 1990,
           dod_in_lunar: true,
-          is_dead: true,
+          is_alive: true,
           is_root: true,
           gender: "male"
         }
@@ -47,7 +47,7 @@ defmodule App.Factory.PersonFactory do
           dod_month: 1,
           dod_year: 1990,
           dod_in_lunar: true,
-          is_dead: false,
+          is_alive: false,
           is_root: false,
           gender: "male"
         }

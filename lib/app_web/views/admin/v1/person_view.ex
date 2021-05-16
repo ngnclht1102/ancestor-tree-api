@@ -34,7 +34,7 @@ defmodule AppWeb.Admin.V1.PersonView do
       dod_month: item.dod_month,
       dod_year: item.dod_year,
       dod_in_lunar: item.dod_in_lunar,
-      is_dead: item.is_dead,
+      is_alive: item.is_alive,
       is_root: item.is_root,
       family_id: item.family_id,
       father_id: item.father_id,

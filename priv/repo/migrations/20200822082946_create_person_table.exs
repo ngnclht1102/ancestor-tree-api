@@ -23,7 +23,7 @@ defmodule App.Repo.Migrations.CreatePersonTable do
       add(:dod_month, :integer)
       add(:dod_year, :integer)
       add(:dod_in_lunar, :boolean)
-      add(:is_dead, :boolean)
+      add(:is_alive, :boolean)
       add(:is_root, :boolean)
       add(:deleted_at, :naive_datetime)
 

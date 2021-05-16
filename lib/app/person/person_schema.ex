@@ -23,7 +23,7 @@ defmodule App.Person.Person do
     :dod_year,
     :dod_in_lunar,
     :gender,
-    :is_dead,
+    :is_alive,
     :sibling_level,
     :family_level,
     :note,
@@ -48,7 +48,7 @@ defmodule App.Person.Person do
     field(:dod_month, :integer)
     field(:dod_year, :integer)
     field(:dod_in_lunar, :boolean)
-    field(:is_dead, :boolean)
+    field(:is_alive, :boolean)
     field(:is_root, :boolean)
     field(:deleted_at, :naive_datetime)
 
