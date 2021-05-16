@@ -1,5 +1,5 @@
 mix clean
-source ./.env
+source ./.dev.env
 rm -rf _build/prod/rel
 mkdir _build/prod/rel
 cd assets && yarn install && yarn run deploy

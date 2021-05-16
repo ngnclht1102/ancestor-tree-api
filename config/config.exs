@@ -15,16 +15,14 @@ config :plug,
 
 # Configures the endpoint
 config :app, AppWeb.Endpoint,
-  url: [host: "localhost"],
-  secret_key_base: "juawRIBEjtWsF+zzQQZLbpFt3iFm6z4DsREoWebQ7PMOfCaXeZEih8yjMgzB/HMu",
+  url: [host: System.fetch_env!("APP_HOST")],
+  secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
   render_errors: [view: AppWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: App.PubSub,
   live_view: [signing_salt: "lMJeDYrt"]
 
 config :joken,
-  default_signer:
-    System.get_env("SECRET_KEY_BASE") ||
-      "juawRIBEjtWsF+zzQQZLbpFt3iFm6z4DsREoWebQ7PMOfCaXeZEih8yjMgzB/HMu"
+  default_signer: System.fetch_env!("SECRET_KEY_BASE")
 
 # Configures Elixir's Logger
 config :logger, :console,

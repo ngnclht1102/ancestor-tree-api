@@ -1,9 +1,7 @@
 use Mix.Config
 
-database_url =
-  System.get_env("DATABASE_URL") ||
-    "ecto://postgres:postgres@localhost:5432/ancestor_tree_dev?pool_size=10"
-
+database_url = System.fetch_env!("DATABASE_URL")
+port = String.to_integer(System.fetch_env!("APP_PORT"))
 # database_url =
 #   System.get_env("DATABASE_URL") ||
 #     raise """
@@ -22,7 +20,7 @@ config :app, App.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :app, AppWeb.Endpoint,
-  http: [port: 4001],
+  http: [port: port],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
