@@ -1,12 +1,13 @@
 defmodule App.Person.Person do
   @moduledoc """
-  Schema for user
+  Schema for person
   """
 
   use Ecto.Schema
   use Arc.Ecto.Schema
 
   alias App.Family.Family
+  alias App.Repo
 
   import Ecto.Changeset
 
@@ -26,7 +27,6 @@ defmodule App.Person.Person do
     :sibling_level,
     :family_level,
     :note,
-    :is_root,
     :father_id,
     :mother_id,
     :spouse_id,
@@ -60,22 +60,23 @@ defmodule App.Person.Person do
     timestamps()
   end
 
-  def changeset(%__MODULE__{} = user, attrs) do
-    user
+  def changeset(%__MODULE__{} = person, attrs) do
+    person
     |> cast(attrs, @allow_fields)
     |> validate_required([:family_id, :full_name])
-    |> validate_changeset(user)
+    |> validate_changeset(person)
+    |> set_family_level()
   end
 
-  def delete_changeset(%__MODULE__{} = user) do
+  def delete_changeset(%__MODULE__{} = person) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
-    user
+    person
     |> change()
     |> put_change(:deleted_at, now)
   end
 
-  defp validate_changeset(changeset, _user) do
+  defp validate_changeset(changeset, _person) do
     changeset
     |> validate_number(:dob_date, greater_than: 0, less_than: 31)
     |> validate_number(:dob_month, greater_than: 0, less_than: 13)
@@ -88,5 +89,21 @@ defmodule App.Person.Person do
     |> foreign_key_constraint(:father_id)
     |> foreign_key_constraint(:mother_id)
     |> foreign_key_constraint(:spouse_id)
+  end
+
+  def set_family_level(changeset) do
+    father_id = changeset |> get_field(:father_id)
+
+    if father_id do
+      father = __MODULE__ |> Repo.get(father_id)
+
+      if father do
+        changeset |> put_change(:family_level, father.family_level + 1)
+      else
+        changeset
+      end
+    else
+      changeset |> put_change(:family_level, 1)
+    end
   end
 end

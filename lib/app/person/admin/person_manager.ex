@@ -35,13 +35,14 @@ defmodule App.Person.Admin.PersonManager do
           where: u.spouse_id == ^person.id,
           where: u.id != ^person.spouse_id
         )
-        |> Repo.all
+        |> Repo.all()
         |> Enum.map(fn x -> x.id end)
+
       from(
         u in Person,
         where: u.id in ^old_spouse_ids
       )
-      |> Repo.update_all(set: [ spouse_id: nil ])
+      |> Repo.update_all(set: [spouse_id: nil])
 
       Person
       |> Repo.get(person.spouse_id)
@@ -100,8 +101,8 @@ defmodule App.Person.Admin.PersonManager do
       from(
         p in Person,
         where: is_nil(p.deleted_at),
+        where: p.family_level == 1,
         where: p.family_id == ^current_family.id,
-        where: p.is_root == true,
         limit: 1
       )
 
