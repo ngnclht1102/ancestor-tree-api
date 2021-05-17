@@ -103,6 +103,7 @@ defmodule App.Person.Admin.PersonManager do
         where: is_nil(p.deleted_at),
         where: p.family_level == 1,
         where: p.family_id == ^current_family.id,
+        where: p.gender == "male",
         limit: 1
       )
 

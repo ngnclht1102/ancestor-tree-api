@@ -77,7 +77,7 @@ defmodule AppWeb.Admin.V1.PersonView do
                 )
               end)
           },
-          render_one(root, __MODULE__, "person.json", as: :item)
+          render_one(root, __MODULE__, "person_in_tree.json", as: :item)
         )
     }
   end

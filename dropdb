@@ -1,0 +1,5 @@
+psql -U postgres -c "drop database $1"
+source .env
+mix ecto.create
+mix ecto.migrate
+mix run priv/repo/seeds.exs

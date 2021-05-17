@@ -22,9 +22,9 @@ if count_admin == 0 do
   # create super admin
   {:ok, admin_user} =
     %{
-      first_name: "Nguyen",
-      last_name: "Nam",
-      email: "admin@ancestortree.com",
+      first_name: "Nguyễn Sĩ",
+      last_name: "Giang Nam",
+      email: "superadmin@honguyensi.com",
       password: "Ancestortree@2020"
     }
     |> AuthManager.create_admin_user()
@@ -32,13 +32,13 @@ if count_admin == 0 do
   # create family owner
   {:ok, owner} =
     {:ok, %{admin_user: admin_user, user: _user, session: _session}} =
-    AuthManager.create_normal_user("ngnclht@gmail.com", "Ancestortree@2020")
+    AuthManager.create_normal_user("admin@honguyensi.com", "12345678")
 
   # create family
   {:ok, family} =
     FamilyManager.create_new_family(admin_user, %{
-      "name" => "Nguyễn Sỹ - Can Lộc Hà Tĩnh",
-      "main_address" => "Can Lộc Hà Tĩnh",
+      "name" => "Nguyễn Sỹ - Đông Tây - Phú Lộc - Can Lộc Hà Tĩnh",
+      "main_address" => "Phú Lộc - Can Lộc Hà Tĩnh",
       "description" => ""
     })
 
@@ -47,20 +47,24 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Nguyễn Sỹ Lai",
       "nickname" => "",
-      "family_level" => 1,
-      "sibling_level" => 2,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
-      "dob_year" => 1900,
       "dob_in_lunar" => true,
-      "dod_date" => 2,
-      "dod_month" => 4,
-      "dod_year" => 1950,
       "dod_in_lunar" => true,
-      "is_alive" => true,
-      "is_root" => true,
+      "is_alive" => false,
       "gender" => "male"
+    })
+
+  {:ok, coDoi} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Phạm Thị Đôi",
+      "nickname" => "",
+      "note" => "",
+      "dob_in_lunar" => true,
+      "dod_in_lunar" => true,
+      "is_alive" => false,
+      "gender" => "female",
+      "spouse_id" => coLai.id
     })
 
   {:ok, ongMai} =
@@ -68,21 +72,15 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Nguyễn Thọ",
       "nickname" => "",
-      "family_level" => 2,
-      "sibling_level" => 2,
+      "sibling_level" => 9,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
       "dob_year" => 1940,
       "dob_in_lunar" => true,
-      "dod_date" => 2,
-      "dod_month" => 4,
       "dod_year" => 2020,
       "dod_in_lunar" => true,
-      "is_alive" => true,
-      "is_root" => false,
+      "is_alive" => false,
       "gender" => "male",
-      "parent_id" => coLai.id
+      "father_id" => coLai.id
     })
 
   {:ok, baMai} =
@@ -90,18 +88,61 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Phạm Thị Chín",
       "nickname" => "",
-      "family_level" => 2,
-      "sibling_level" => 2,
+      "sibling_level" => 9,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
-      "dob_year" => 1940,
+      "dob_year" => 1944,
       "dob_in_lunar" => true,
       "dod_in_lunar" => true,
       "is_alive" => false,
-      "is_root" => false,
       "gender" => "female",
       "spouse_id" => ongMai.id
+    })
+
+  {:ok, ongHung} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Sĩ Tiến",
+      "nickname" => "ông Hùng",
+      "sibling_level" => 8,
+      "note" => "",
+      "dob_in_lunar" => true,
+      "is_alive" => false,
+      "gender" => "male",
+      "father_id" => coLai.id
+    })
+
+  {:ok, baHung} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Trần Thị Soa",
+      "nickname" => "",
+      "note" => "",
+      "dod_in_lunar" => false,
+      "is_alive" => true,
+      "gender" => "female",
+      "spouse_id" => ongHung.id
+    })
+
+  {:ok, ongCung} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Sĩ Tước",
+      "nickname" => "ông Cung",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "male",
+      "father_id" => coLai.id
+    })
+
+  {:ok, baCung} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Bà Cung",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => false,
+      "gender" => "female",
+      "spouse_id" => ongCung.id
     })
 
   {:ok, boTruc} =
@@ -109,15 +150,11 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Nguyễn Sỹ Trúc",
       "nickname" => "",
-      "family_level" => 3,
       "sibling_level" => 2,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
       "dob_year" => 1968,
       "dob_in_lunar" => true,
-      "is_alive" => false,
-      "is_root" => false,
+      "is_alive" => true,
       "gender" => "male",
       "mother_id" => baMai.id,
       "father_id" => ongMai.id
@@ -128,15 +165,10 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Trần Thị Hải",
       "nickname" => "",
-      "family_level" => 3,
-      "sibling_level" => 2,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
       "dob_year" => 1969,
       "dob_in_lunar" => true,
-      "is_alive" => false,
-      "is_root" => false,
+      "is_alive" => true,
       "gender" => "female",
       "spouse_id" => boTruc.id
     })
@@ -146,15 +178,11 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Nguyễn Sỹ Hoàng",
       "nickname" => "",
-      "family_level" => 3,
       "sibling_level" => 3,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
       "dob_year" => 1975,
       "dob_in_lunar" => true,
-      "is_alive" => false,
-      "is_root" => false,
+      "is_alive" => true,
       "gender" => "male",
       "mother_id" => baMai.id,
       "father_id" => ongMai.id
@@ -165,16 +193,80 @@ if count_admin == 0 do
     |> PersonManager.create_new_person(owner.user, %{
       "full_name" => "Nguyễn Thị Hằng",
       "nickname" => "",
-      "family_level" => 3,
-      "sibling_level" => 2,
       "note" => "",
-      "dob_date" => 11,
-      "dob_month" => 11,
       "dob_year" => 1988,
       "dob_in_lunar" => true,
-      "is_alive" => false,
-      "is_root" => false,
+      "is_alive" => true,
       "gender" => "female",
       "spouse_id" => chuHoang.id
+    })
+
+  {:ok, chuHoan} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Sỹ Hoan",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "male",
+      "mother_id" => baMai.id,
+      "father_id" => ongMai.id
+    })
+
+  {:ok, muLinh} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Trần Thị Hồng Linh",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "female",
+      "spouse_id" => chuHoan.id
+    })
+
+  {:ok, chuNham} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Sỹ Nhâm",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "male",
+      "mother_id" => baMai.id,
+      "father_id" => ongMai.id
+    })
+
+  {:ok, muNhan} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Thị Thanh Nhàn",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "female",
+      "spouse_id" => chuNham.id
+    })
+
+  {:ok, chuHoanf} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Nguyễn Sỹ Hoàn",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "male",
+      "mother_id" => baMai.id,
+      "father_id" => ongMai.id
+    })
+
+  {:ok, muNhan} =
+    family
+    |> PersonManager.create_new_person(owner.user, %{
+      "full_name" => "Trịnh Thị Lan",
+      "nickname" => "",
+      "note" => "",
+      "is_alive" => true,
+      "gender" => "female",
+      "spouse_id" => chuHoanf.id
     })
 end
