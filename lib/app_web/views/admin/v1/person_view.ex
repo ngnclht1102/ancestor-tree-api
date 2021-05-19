@@ -40,7 +40,11 @@ defmodule AppWeb.Admin.V1.PersonView do
       father_id: item.father_id,
       mother_id: item.mother_id,
       spouse_id: item.spouse_id,
-      deleted_at: item.deleted_at
+      deleted_at: item.deleted_at,
+      address: item.address,
+      phone_number: item.phone_number,
+      tomb_address: item.tomb_address,
+      ascii_full_name: item.ascii_full_name
     }
   end
 

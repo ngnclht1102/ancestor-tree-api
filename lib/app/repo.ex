@@ -3,7 +3,8 @@ defmodule App.Repo do
     otp_app: :app,
     adapter: Ecto.Adapters.Postgres
 
-  import Ecto.Query, only: [limit: 2, offset: 2, order_by: 2]
+  import Ecto.Query
+  alias App.Base.Ext.Utils.StringUtils
 
   def page_size, do: 20
 
@@ -13,10 +14,12 @@ defmodule App.Repo do
       page_number: _page_number,
       offset: offset,
       sort_direction: sort_direction,
-      sort_field: sort_field
+      sort_field: sort_field,
+      filters: filters
     } = paginate_params(opts)
 
     query
+    |> build_filter_condition(filters)
     |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
     |> limit(^page_size)
     |> offset(^offset)
@@ -24,6 +27,14 @@ defmodule App.Repo do
   end
 
   def paginate_params(opts) do
+    filters =
+      try do
+        filter_raw = Poison.decode!(opts["filter"])
+        filter_raw |> Map.fetch!("arr")
+      rescue
+        _ -> []
+      end
+
     page_size = get_page_size(opts["page_size"])
     page_number = get_page(opts["page"])
 
@@ -37,8 +48,53 @@ defmodule App.Repo do
       page_number: page_number,
       offset: offset,
       sort_field: sort_field,
-      sort_direction: sort_direction
+      sort_direction: sort_direction,
+      filters: filters
     }
+  end
+
+  def build_filter_condition(query, filters) do
+    Enum.reduce(filters, query, &do_build_filter_condition(&1, &2))
+  end
+
+  defp do_build_filter_condition(
+         %{"field" => field, "value" => value, "operation" => operation},
+         acc
+       ) do
+    atom_field = String.to_atom(field)
+    acc |> where_operation(field, StringUtils.vietnamese_to_ascii(value), operation)
+  end
+
+  defp do_build_filter_condition(_, acc), do: acc
+
+  defp where_operation(query, field, value, operation) when operation == "ilike" do
+    atom_field = String.to_atom(field)
+    query |> where([i], ilike(field(i, ^atom_field), ^value))
+  end
+
+  defp where_operation(query, field, value, operation) when operation == "==" do
+    atom_field = String.to_atom(field)
+    query |> where([i], field(i, ^atom_field) == ^value)
+  end
+
+  defp where_operation(query, field, value, operation) when operation == ">=" do
+    atom_field = String.to_atom(field)
+    query |> where([i], field(i, ^atom_field) >= ^value)
+  end
+
+  defp where_operation(query, field, value, operation) when operation == ">" do
+    atom_field = String.to_atom(field)
+    query |> where([i], field(i, ^atom_field) > ^value)
+  end
+
+  defp where_operation(query, field, value, operation) when operation == "<=" do
+    atom_field = String.to_atom(field)
+    query |> where([i], field(i, ^atom_field) <= ^value)
+  end
+
+  defp where_operation(query, field, value, operation) when operation == "<" do
+    atom_field = String.to_atom(field)
+    query |> where([i], field(i, ^atom_field) < ^value)
   end
 
   def sort(%{"sort_field" => field, "sort_direction" => direction}) do
