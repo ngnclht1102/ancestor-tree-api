@@ -8,6 +8,7 @@ defmodule App.Person.Person do
 
   alias App.Family.Family
   alias App.Repo
+  alias App.Base.Ext.Utils.StringUtils
 
   import Ecto.Changeset
 
@@ -58,6 +59,12 @@ defmodule App.Person.Person do
     field(:is_root, :boolean)
     field(:deleted_at, :naive_datetime)
 
+    field(:ascii_nickname, :string)
+    field(:ascii_full_name, :string)
+    field(:ascii_address, :string)
+    field(:ascii_tomb_address, :string)
+    field(:ascii_note, :string)
+
     belongs_to(:father, __MODULE__)
     belongs_to(:mother, __MODULE__)
     belongs_to(:spouse, __MODULE__)
@@ -101,6 +108,22 @@ defmodule App.Person.Person do
     |> foreign_key_constraint(:father_id)
     |> foreign_key_constraint(:mother_id)
     |> foreign_key_constraint(:spouse_id)
+    |> update_for_search
+  end
+
+  defp update_for_search(changeset) do
+    ascii_nickname = get_field(changeset, :nickname) |> StringUtils.vietnamese_to_ascii()
+    ascii_full_name = get_field(changeset, :full_name) |> StringUtils.vietnamese_to_ascii()
+    ascii_address = get_field(changeset, :address) |> StringUtils.vietnamese_to_ascii()
+    ascii_tomb_address = get_field(changeset, :tomb_address) |> StringUtils.vietnamese_to_ascii()
+    ascii_note = get_field(changeset, :note) |> StringUtils.vietnamese_to_ascii()
+
+    changeset
+    |> put_change(:ascii_nickname, ascii_nickname)
+    |> put_change(:ascii_full_name, ascii_full_name)
+    |> put_change(:ascii_address, ascii_address)
+    |> put_change(:ascii_tomb_address, ascii_tomb_address)
+    |> put_change(:ascii_note, ascii_note)
   end
 
   def set_family_level(changeset) do
@@ -121,14 +144,18 @@ defmodule App.Person.Person do
   end
 
   defp get_family_level_from_spouse(spouse_id, changeset) do
-    spouse =
-      __MODULE__
-      |> Repo.get(spouse_id)
+    if not is_nil(spouse_id) do
+      spouse =
+        __MODULE__
+        |> Repo.get(spouse_id)
 
-    if spouse do
-      changeset |> put_change(:family_level, spouse.family_level)
+      if spouse do
+        changeset |> put_change(:family_level, spouse.family_level)
+      else
+        changeset |> put_change(:family_level, nil)
+      end
     else
-      changeset |> put_change(:family_level, 1)
+      changeset |> put_change(:family_level, nil)
     end
   end
 end

@@ -4,7 +4,7 @@ defmodule App.Repo do
     adapter: Ecto.Adapters.Postgres
 
   import Ecto.Query
-  # , only: [limit: 2, offset: 2, order_by: 2, where: 2]
+  alias App.Base.Ext.Utils.StringUtils
 
   def page_size, do: 20
 
@@ -62,7 +62,7 @@ defmodule App.Repo do
          acc
        ) do
     atom_field = String.to_atom(field)
-    acc |> where_operation(field, value, operation)
+    acc |> where_operation(field, StringUtils.vietnamese_to_ascii(value), operation)
   end
 
   defp do_build_filter_condition(_, acc), do: acc
