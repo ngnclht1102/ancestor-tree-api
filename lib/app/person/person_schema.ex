@@ -133,8 +133,16 @@ defmodule App.Person.Person do
     if father_id do
       father = __MODULE__ |> Repo.get(father_id)
 
+      father_family_level =
+        if is_nil(father.family_level) do
+          father |> __MODULE__.family_level_changeset(1) |> Repo.update()
+          1
+        else
+          father.family_level
+        end
+
       if father do
-        changeset |> put_change(:family_level, father.family_level + 1)
+        changeset |> put_change(:family_level, father_family_level + 1)
       else
         spouse_id |> get_family_level_from_spouse(changeset)
       end

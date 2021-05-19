@@ -43,7 +43,8 @@ defmodule AppWeb.Admin.V1.PersonView do
       deleted_at: item.deleted_at,
       address: item.address,
       phone_number: item.phone_number,
-      tomb_address: item.tomb_address
+      tomb_address: item.tomb_address,
+      ascii_full_name: item.ascii_full_name
     }
   end
 
