@@ -30,13 +30,19 @@ defmodule App.Person.Person do
     :father_id,
     :mother_id,
     :spouse_id,
-    :family_id
+    :family_id,
+    :address,
+    :phone_number,
+    :tomb_address
   ]
 
   schema "persons" do
     field(:full_name, :string)
     field(:nickname, :string)
     field(:gender, :string)
+    field(:address, :string)
+    field(:phone_number, :string)
+    field(:tomb_address, :string)
     field(:family_level, :integer)
     field(:sibling_level, :integer)
     field(:note, :string)
@@ -68,6 +74,12 @@ defmodule App.Person.Person do
     |> set_family_level()
   end
 
+  def family_level_changeset(%__MODULE__{} = person, new_level) do
+    person
+    |> change()
+    |> put_change(:family_level, new_level)
+  end
+
   def delete_changeset(%__MODULE__{} = person) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
@@ -93,6 +105,7 @@ defmodule App.Person.Person do
 
   def set_family_level(changeset) do
     father_id = changeset |> get_field(:father_id)
+    spouse_id = changeset |> get_field(:spouse_id)
 
     if father_id do
       father = __MODULE__ |> Repo.get(father_id)
@@ -100,8 +113,20 @@ defmodule App.Person.Person do
       if father do
         changeset |> put_change(:family_level, father.family_level + 1)
       else
-        changeset
+        spouse_id |> get_family_level_from_spouse(changeset)
       end
+    else
+      spouse_id |> get_family_level_from_spouse(changeset)
+    end
+  end
+
+  defp get_family_level_from_spouse(spouse_id, changeset) do
+    spouse =
+      __MODULE__
+      |> Repo.get(spouse_id)
+
+    if spouse do
+      changeset |> put_change(:family_level, spouse.family_level)
     else
       changeset |> put_change(:family_level, 1)
     end

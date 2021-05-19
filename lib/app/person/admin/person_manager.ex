@@ -6,6 +6,7 @@ defmodule App.Person.Admin.PersonManager do
   alias App.Person.Person
 
   import Ecto.Query, only: [from: 2]
+  import Ecto.Changeset
 
   def create_new_person(current_family, current_admin, params) do
     Person.changeset(
@@ -54,18 +55,47 @@ defmodule App.Person.Admin.PersonManager do
   end
 
   def update_person(_current_admin, id, params) do
-    person = Person |> Repo.get(id)
+    person = Person |> Repo.get(id) |> Repo.preload(:spouse)
 
-    if person do
+    changeset =
       Person.changeset(
         person,
         params
       )
+
+    current_level = person.family_level
+    new_level = changeset |> get_field(:family_level)
+
+    need_update_family_level =
+      if new_level != current_level do
+        rev_update_family_level_for_children(person, new_level)
+      end
+
+    if person do
+      changeset
       |> Repo.update()
       |> update_spouse_id_for_partner
     else
       {:error, [:person_not_found]}
     end
+  end
+
+  defp rev_update_family_level_for_children(person, new_level) do
+    if person.spouse do
+      person.spouse |> Person.family_level_changeset(new_level) |> Repo.update()
+    end
+
+    person |> Person.family_level_changeset(new_level) |> Repo.update()
+
+    children =
+      from(
+        p in Person,
+        where: is_nil(p.deleted_at),
+        where: p.father_id == ^person.id
+      )
+      |> Repo.all()
+      |> Repo.preload(:spouse)
+      |> Enum.map(fn x -> rev_update_family_level_for_children(x, new_level + 1) end)
   end
 
   def list_person_of_given_family(current_family, params) do
