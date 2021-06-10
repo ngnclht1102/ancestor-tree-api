@@ -1,0 +1,2 @@
+source .prod.env
+mix $1

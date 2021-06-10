@@ -35,3 +35,4 @@ npm-debug.log
 *.icloud
 .DS_Store
 /node_modules/
+*.env
