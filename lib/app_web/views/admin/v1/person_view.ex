@@ -44,8 +44,8 @@ defmodule AppWeb.Admin.V1.PersonView do
       address: item.address,
       phone_number: item.phone_number,
       tomb_address: item.tomb_address,
-      ascii_full_name: item.ascii_full_name
-      stt: item.stt,
+      ascii_full_name: item.ascii_full_name,
+      stt: item.stt
     }
   end
 
