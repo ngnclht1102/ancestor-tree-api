@@ -17,7 +17,7 @@ defmodule AppWeb.Admin.V1.PersonController do
       1..length(records) |> Enum.map(fn index ->
         Map.merge(
           Enum.at(records, index - 1),
-          %{ id: index }
+          %{ stt: index }
         )
       end)
     else
