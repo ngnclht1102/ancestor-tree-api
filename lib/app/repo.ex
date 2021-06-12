@@ -18,12 +18,21 @@ defmodule App.Repo do
       filters: filters
     } = paginate_params(opts)
 
-    query
+    query = query
     |> build_filter_condition(filters)
-    |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
-    |> limit(^page_size)
-    |> offset(^offset)
-    |> all()
+    # |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
+
+
+    query = if not is_nil(sort_direction) and not is_nil(sort_field) and sort_field != "NOSORT"  do
+      query |> order_by(^sort(%{"sort_direction" => sort_direction, "sort_field" => sort_field}))
+    else
+      query
+    end
+
+    query
+      |> limit(^page_size)
+      |> offset(^offset)
+      |> all()
   end
 
   def paginate_params(opts) do

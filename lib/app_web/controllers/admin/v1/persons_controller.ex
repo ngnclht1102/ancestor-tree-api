@@ -13,6 +13,16 @@ defmodule AppWeb.Admin.V1.PersonController do
     %{page_size: page_size, page_number: _page_number, offset: offset} =
       App.Repo.paginate_params(params)
 
+    records = if not is_nil(records) and length(records) > 0  do
+      1..length(records) |> Enum.map(fn index ->
+        Map.merge(
+          Enum.at(records, index - 1),
+          %{ id: index }
+        )
+      end)
+    else
+      records
+    end
     conn
     |> put_resp_header("content-range", "items #{offset}-#{page_size}/#{count}")
     |> put_resp_header("Access-Control-Expose-Headers", "Content-Range")

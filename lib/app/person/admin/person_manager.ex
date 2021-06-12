@@ -108,7 +108,8 @@ defmodule App.Person.Admin.PersonManager do
       from(
         p in Person,
         where: is_nil(p.deleted_at),
-        where: p.family_id == ^current_family.id
+        where: p.family_id == ^current_family.id,
+        order_by: [asc: p.family_level, desc: p.dob_year]
       )
 
     query = if filters["q"] do
@@ -125,8 +126,6 @@ defmodule App.Person.Admin.PersonManager do
         |> or_where([q], ilike(q.ascii_tomb_address, ^ilike_query))
         |> or_where([q], ilike(q.ascii_note, ^ilike_query))
         |> or_where([q], ilike(q.phone_number, ^ilike_query))
-        |> or_where([q], ilike(q.dod_year, ^ilike_query))
-        |> or_where([q], ilike(q.dob_year, ^ilike_query))
     else
       query
     end
