@@ -34,7 +34,6 @@ defmodule App.Repo do
       rescue
         _ -> []
       end
-
     page_size = get_page_size(opts["page_size"])
     page_number = get_page(opts["page"])
 
@@ -42,7 +41,6 @@ defmodule App.Repo do
     sort_direction = get_sort_direction(opts["sort_direction"])
 
     offset = page_size * (page_number - 1)
-
     %{
       page_size: page_size,
       page_number: page_number,

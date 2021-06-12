@@ -5,7 +5,7 @@ defmodule App.Person.Admin.PersonManager do
   alias App.Repo
   alias App.Person.Person
 
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query
   import Ecto.Changeset
 
   def create_new_person(current_family, current_admin, params) do
@@ -99,12 +99,37 @@ defmodule App.Person.Admin.PersonManager do
   end
 
   def list_person_of_given_family(current_family, params) do
+    filters = try do
+      Poison.decode!(params["filter"])
+    rescue
+      _ -> %{}
+    end
     query =
       from(
         p in Person,
         where: is_nil(p.deleted_at),
         where: p.family_id == ^current_family.id
       )
+
+    query = if filters["q"] do
+      ilike_query = "%#{filters["q"]}%"
+      query
+        |> where([q], ilike(q.ascii_nickname, ^ilike_query))
+        |> or_where([q], ilike(q.nickname, ^ilike_query))
+        |> or_where([q], ilike(q.full_name, ^ilike_query))
+        |> or_where([q], ilike(q.address, ^ilike_query))
+        |> or_where([q], ilike(q.tomb_address, ^ilike_query))
+        |> or_where([q], ilike(q.note, ^ilike_query))
+        |> or_where([q], ilike(q.ascii_full_name, ^ilike_query))
+        |> or_where([q], ilike(q.ascii_address, ^ilike_query))
+        |> or_where([q], ilike(q.ascii_tomb_address, ^ilike_query))
+        |> or_where([q], ilike(q.ascii_note, ^ilike_query))
+        |> or_where([q], ilike(q.phone_number, ^ilike_query))
+        |> or_where([q], ilike(q.dod_year, ^ilike_query))
+        |> or_where([q], ilike(q.dob_year, ^ilike_query))
+    else
+      query
+    end
 
     records = query |> Repo.paginate(params)
     count = query |> Repo.aggregate(:count, :id)
