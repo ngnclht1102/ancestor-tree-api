@@ -109,7 +109,7 @@ defmodule App.Person.Admin.PersonManager do
         p in Person,
         where: is_nil(p.deleted_at),
         where: p.family_id == ^current_family.id,
-        order_by: [asc: p.family_level, desc: p.dob_year]
+        order_by: [asc: p.family_level, asc: p.dob_year, asc: p.sibling_level]
       )
 
     query = if filters["q"] do
