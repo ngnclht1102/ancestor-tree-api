@@ -83,7 +83,7 @@ defmodule AppWeb.Admin.V1.PersonView do
               Enum.reduce(children, %{}, fn item, acc ->
                 Map.put(
                   acc,
-                  "child_#{item.id}",
+                  "child_#{item.sibling_level}_#{item.id}",
                   render_one(item, __MODULE__, "person_in_tree.json", as: :item)
                 )
               end)

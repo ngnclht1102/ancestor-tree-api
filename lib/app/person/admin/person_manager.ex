@@ -187,11 +187,21 @@ defmodule App.Person.Admin.PersonManager do
         p in Person,
         where: is_nil(p.deleted_at),
         where: p.family_id == ^current_family.id,
-        where: p.father_id == ^person.id
+        where: p.father_id == ^person.id,
+        order_by: [asc: p.sibling_level, asc: p.dob_year]
       )
 
-    first_level_query
+    data = first_level_query
     |> Repo.all()
     |> Repo.preload(:spouse)
+    Enum.map(data, fn people ->
+      # this is for order the tree, if sibling_level is not defined, bring the person to the bottom
+      sibling_level = if is_nil(people.sibling_level) do
+        100 # 100 is enough to bring the people down
+      else
+        people.sibling_level
+      end
+      Map.merge(people, %{ sibling_level: sibling_level })
+    end)
   end
 end
