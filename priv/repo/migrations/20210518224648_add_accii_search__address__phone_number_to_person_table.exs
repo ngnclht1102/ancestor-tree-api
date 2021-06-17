@@ -39,7 +39,7 @@ defmodule App.Repo.Migrations.AddAcciiSearchAddressPhoneNumberToPersonTable do
           ),
           '[ÝýỲỳỶỷỸỹỴỵ]', 'y', 'g'
         ),
-        '[đ]', 'd', 'g'
+        '[đĐ]', 'd', 'g'
       )
     """
 

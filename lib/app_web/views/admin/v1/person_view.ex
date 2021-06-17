@@ -52,7 +52,8 @@ defmodule AppWeb.Admin.V1.PersonView do
       phone_number: item.phone_number,
       tomb_address: item.tomb_address,
       ascii_full_name: item.ascii_full_name,
-      stt: stt
+      stt: stt,
+      husband_name: item.husband_name,
     }
   end
 
@@ -64,6 +65,7 @@ defmodule AppWeb.Admin.V1.PersonView do
       nickname: item.nickname,
       gender: item.gender,
       sibling_level: item.sibling_level,
+      husband_name: item.husband_name,
       spouse:
         item.spouse_id && render_one(item.spouse, __MODULE__, "spouse_in_tree.json", as: :item)
     }

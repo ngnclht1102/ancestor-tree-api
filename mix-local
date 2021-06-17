@@ -1,0 +1,2 @@
+source .env
+mix $1 $2

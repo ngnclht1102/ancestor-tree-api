@@ -34,7 +34,8 @@ defmodule App.Person.Person do
     :family_id,
     :address,
     :phone_number,
-    :tomb_address
+    :tomb_address,
+    :husband_name
   ]
 
   schema "persons" do
@@ -64,6 +65,8 @@ defmodule App.Person.Person do
     field(:ascii_address, :string)
     field(:ascii_tomb_address, :string)
     field(:ascii_note, :string)
+
+    field(:husband_name, :string)
 
     belongs_to(:father, __MODULE__)
     belongs_to(:mother, __MODULE__)
