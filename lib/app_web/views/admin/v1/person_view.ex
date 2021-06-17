@@ -12,7 +12,8 @@ defmodule AppWeb.Admin.V1.PersonView do
       id: item.id,
       name: item.full_name,
       full_name: item.full_name,
-      nickname: item.nickname
+      nickname: item.nickname,
+      gender: item.gender
     }
   end
 
