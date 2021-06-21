@@ -53,7 +53,7 @@ defmodule AppWeb.Admin.V1.PersonView do
       tomb_address: item.tomb_address,
       ascii_full_name: item.ascii_full_name,
       stt: stt,
-      husband_name: item.husband_name,
+      belong_to_main_list_of_family: item.belong_to_main_list_of_family,
     }
   end
 
@@ -65,7 +65,7 @@ defmodule AppWeb.Admin.V1.PersonView do
       nickname: item.nickname,
       gender: item.gender,
       sibling_level: item.sibling_level,
-      husband_name: item.husband_name,
+      belong_to_main_list_of_family: item.belong_to_main_list_of_family,
       spouse:
         item.spouse_id && render_one(item.spouse, __MODULE__, "spouse_in_tree.json", as: :item)
     }

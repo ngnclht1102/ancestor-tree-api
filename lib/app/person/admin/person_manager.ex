@@ -130,6 +130,23 @@ defmodule App.Person.Admin.PersonManager do
       query
     end
 
+    query = if not is_nil(filters["belong_to_main_list_of_family"])
+      and filters["belong_to_main_list_of_family"] == false do
+      query
+        |> where([q], q.belong_to_main_list_of_family == false)
+    else
+      # by default we don't load people not belong to the main list
+      query
+        |> where([q], q.belong_to_main_list_of_family == true)
+    end
+
+    query = if not is_nil(filters["is_alive"]) do
+      query
+        |> where([q], q.is_alive == ^filters["is_alive"])
+    else
+      query
+    end
+
     records = query |> Repo.paginate(params)
     count = query |> Repo.aggregate(:count, :id)
     %{count: count, records: records}
