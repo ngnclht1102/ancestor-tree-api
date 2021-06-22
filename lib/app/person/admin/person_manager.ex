@@ -130,6 +130,14 @@ defmodule App.Person.Admin.PersonManager do
       query
     end
 
+    query = if filters["dob_year"] do
+      {dobYearInt, ""} = Integer.parse(filters["dob_year"])
+      query
+        |> where([q], q.dob_year == ^dobYearInt)
+    else
+      query
+    end
+
     query = if not is_nil(filters["belong_to_main_list_of_family"])
       and filters["belong_to_main_list_of_family"] == false do
       query

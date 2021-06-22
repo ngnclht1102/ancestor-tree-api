@@ -51,7 +51,7 @@ defmodule AppWeb.Admin.V1.PersonView do
       address: item.address,
       phone_number: item.phone_number,
       tomb_address: item.tomb_address,
-      ascii_full_name: item.ascii_full_name,
+      ascii_full_name: "#{item.full_name} (#{item.nickname && "#{item.nickname} - "}#{item.ascii_full_name} #{item.dob_year})",
       stt: stt,
       belong_to_main_list_of_family: item.belong_to_main_list_of_family,
     }
