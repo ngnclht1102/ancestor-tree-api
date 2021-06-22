@@ -115,17 +115,19 @@ defmodule App.Person.Admin.PersonManager do
     query = if filters["q"] do
       ilike_query = "%#{filters["q"]}%"
       query
-        |> where([q], ilike(q.ascii_nickname, ^ilike_query))
-        |> or_where([q], ilike(q.nickname, ^ilike_query))
-        |> or_where([q], ilike(q.full_name, ^ilike_query))
-        |> or_where([q], ilike(q.address, ^ilike_query))
-        |> or_where([q], ilike(q.tomb_address, ^ilike_query))
-        |> or_where([q], ilike(q.note, ^ilike_query))
-        |> or_where([q], ilike(q.ascii_full_name, ^ilike_query))
-        |> or_where([q], ilike(q.ascii_address, ^ilike_query))
-        |> or_where([q], ilike(q.ascii_tomb_address, ^ilike_query))
-        |> or_where([q], ilike(q.ascii_note, ^ilike_query))
-        |> or_where([q], ilike(q.phone_number, ^ilike_query))
+        |> where([q], ilike(q.ascii_full_name, ^ilike_query))
+        # TODO: use dynamic to buidl query to avoid wrong result
+        # |> where([q], ilike(q.ascii_nickname, ^ilike_query))
+        # |> or_where([q], ilike(q.nickname, ^ilike_query))
+        # |> or_where([q], ilike(q.full_name, ^ilike_query))
+        # |> or_where([q], ilike(q.address, ^ilike_query))
+        # |> or_where([q], ilike(q.tomb_address, ^ilike_query))
+        # |> or_where([q], ilike(q.note, ^ilike_query))
+        # |> or_where([q], ilike(q.ascii_full_name, ^ilike_query))
+        # |> or_where([q], ilike(q.ascii_address, ^ilike_query))
+        # |> or_where([q], ilike(q.ascii_tomb_address, ^ilike_query))
+        # |> or_where([q], ilike(q.ascii_note, ^ilike_query))
+        # |> or_where([q], ilike(q.phone_number, ^ilike_query))
     else
       query
     end
