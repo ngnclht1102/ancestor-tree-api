@@ -139,15 +139,19 @@ defmodule App.Person.Admin.PersonManager do
     else
       query
     end
-
     query = if not is_nil(filters["belong_to_main_list_of_family"])
       and filters["belong_to_main_list_of_family"] == false do
       query
         |> where([q], q.belong_to_main_list_of_family == false)
     else
-      # by default we don't load people not belong to the main list
-      query
+      if not is_nil(filters["all_list"]) do
+        # if client need to load full list
+        query
+      else
+        # by default we don't load people not belong to the main list
+        query
         |> where([q], q.belong_to_main_list_of_family == true)
+      end
     end
 
     query = if not is_nil(filters["is_alive"]) do
